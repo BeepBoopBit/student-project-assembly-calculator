@@ -2,15 +2,18 @@
 .stack
 .data
  
-    first_num   db "Enter the first number: $"
-    second_num  db "Enter the second number: $"
-    ope_prompt  db "'+' Add | '-' Subtract | '*' Multiply | '/' Divide $"
-    operation   db "Enter Operation: $" 
-    ans_prompt  db "The answer is: $"
-    end_prompt  db "Continue (y/n)? $"
-    err1_prompt db "Wrong Operation Input: $"
-    err2_prompt db "Wrong Integer Input: $"
-    new_line    db 0ah, 0dh, '$'
+    first_num       db "Enter the first number: $"
+    second_num      db "Enter the second number: $"
+    ope_prompt      db "'+' Add | '-' Subtract | '*' Multiply | '/' Divide $"
+    operation       db "Enter Operation: $" 
+    ans_prompt      db "The answer is: $"
+    end_prompt      db "Continue (y/n)? $"
+    err1_prompt     db "Wrong Operation Input: $"
+    err2_prompt     db "Wrong Integer Input: $"
+    new_line        db 0ah, 0dh, '$'
+    first_number    db 0
+    second_number   db 0
+    answer_number   db 0
 
 .code
 main proc
@@ -46,10 +49,14 @@ MainProgram:
 
         ; check number if out of bound
         CMP al, '0'
-        JB Check_first              ; uhm should have "said wrong input?" (suggest) - ryoji
-        CMP al, '9'                 ; naglagay me new db for that braie
+        JB Check_first              
+        CMP al, '9'
         JA check_first
-
+        
+        ; store
+        mov ah, 0
+        mov bx, offset first_number
+        mov [bx], al
     Check_second:
         mov ah, 09h
         mov dx, offset second_num
@@ -69,6 +76,12 @@ MainProgram:
         CMP al, '9'
         JA Check_second
 
+        ; store
+        mov ah, 0
+        mov bx, offset second_number
+        mov [bx], al
+        
+        ; print new line
         mov ah, 09h 
         mov dx, offset new_line
         int 21h
@@ -92,13 +105,13 @@ MainProgram:
 
         ; check if basic operations
         CMP al, '+'
-        JE Addition
+        JE Addition_relative
         CMP al, '-'
-        JE Subtraction
+        JE Subtraction_relative
         CMP al, '/'
-        JE Division
+        JE Division_relative
         CMP al, '*'
-        JE Multiplication    
+        JE Multiplication_relative 
 
         ; check if input is correct 
         CMP al, '*'
@@ -109,7 +122,7 @@ MainProgram:
 
         ;Operation Input Erorr Check 
         Operation_Error:
-        lea dx, err_prompt
+        lea dx, err2_prompt
         mov ah, 09h ;output string ds:dx
         int 21h
 
@@ -126,9 +139,51 @@ MainProgram:
         mov dx, offset ans_prompt
         int 21h
 
-        mov ah, 09h 
-        mov dx, offset new_line
-        int 21h
+
+        ; get the answer
+        mov bx, offset answer_number
+        mov ax, [bx]
+        ; get the data
+        push ax
+
+        ; compare if double digit or single digit
+        mov ah, 00h
+        cmp al, 0Ah;
+        JAE DoubleDigit
+        JMP SingleDigit
+
+        DoubleDigit:
+            mov ah, 02h
+            mov dl, '1'
+            int 21h
+            pop dx
+            sub dl, 10 ; currently 98
+            add dl, 30h ; currently 30
+            mov ah, 02h
+            int 21h
+            jmp NoSingleDigit
+
+        SingleDigit:
+            mov ah, 02h
+            mov dl, al
+            add dl, 30h
+            int 21h
+
+        NoSingleDigit:
+            mov ah, 09h 
+            mov dx, offset new_line
+            int 21h
+            jmp Continue;
+
+    Addition_relative:
+        jmp Addition
+    Subtraction_relative:
+        jmp Subtraction
+    Multiplication_relative:
+        jmp Multiplication
+    Division_relative:
+        jmp Division
+
 
     Continue:
         mov ah, 09h 
@@ -158,9 +213,24 @@ MainProgram:
 
     ; basic operation function
     Addition:
-        
-        ; your code here
-        
+
+        mov bx, offset first_number
+        mov ax, [bx]
+
+        mov bx, offset second_number
+        mov cx, [bx]
+
+        mov ah, 0 ; reset
+        mov ch, 0 ; reset
+        sub ax, 30h
+        sub cx, 30h
+
+        ; add value
+        add ax, cx
+        mov bx, offset answer_number
+        mov [bx], ax
+
+        ; call answer
         JMP Answer
 
     Subtraction:
