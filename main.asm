@@ -8,6 +8,8 @@
     operation   db "Enter Operation: $" 
     ans_prompt  db "The answer is: $"
     end_prompt  db "Continue (y/n)? $"
+    err1_prompt db "Wrong Operation Input: $"
+    err2_prompt db "Wrong Integer Input: $"
     new_line    db 0ah, 0dh, '$'
 
 .code
@@ -45,7 +47,7 @@ MainProgram:
         ; check number if out of bound
         CMP al, '0'
         JB Check_first              ; uhm should have "said wrong input?" (suggest) - ryoji
-        CMP al, '9'
+        CMP al, '9'                 ; naglagay me new db for that braie
         JA check_first
 
     Check_second:
@@ -97,7 +99,20 @@ MainProgram:
         JE Division
         CMP al, '*'
         JE Multiplication    
+
+        ; check if input is correct 
+        CMP al, '*'
+        JB Operation_Error 
+        CMP al, '/'
+        JA Operation_Error
         JMP Check_operation
+
+        ;Operation Input Erorr Check 
+        Operation_Error:
+        lea dx, err_prompt
+        mov ah, 09h ;output string ds:dx
+        int 21h
+
 
     Main_relative:
         JMP MainProgram
