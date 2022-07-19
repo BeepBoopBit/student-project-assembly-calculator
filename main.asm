@@ -23,7 +23,7 @@ title Calculator Project - GROUP 1
     ; 0111 -> Wrong Input Second Number
     ; 1001 -> Wrong Input Try Again
     err_flag        db 0000b  
-    err_input   db "[!] Wrong Input$"
+    err_input   db " [!] Wrong Input$"
 
     ; Calculation Variables
     first_value     db 39h
@@ -509,7 +509,7 @@ title Calculator Project - GROUP 1
 
     PRINT_OPERATOR_ERROR PROC  ; Ryoji
         MOV DH, 03h
-        MOV DL, 021h
+        MOV DL, 020h
         CALL MOVE_CURSOR
 
         MOV AH, 09h;
@@ -523,7 +523,7 @@ title Calculator Project - GROUP 1
 
     PRINT_FIRST_NUMBER_ERROR PROC  ; Ryoji
         MOV DH, 01h
-        MOV DL, 021h
+        MOV DL, 020h
         CALL MOVE_CURSOR
 
         MOV AH, 09h
@@ -537,7 +537,7 @@ title Calculator Project - GROUP 1
 
     PRINT_SECOND_NUMBER_ERROR PROC  ; Ryoji
         MOV DH, 02h
-        MOV DL, 021h
+        MOV DL, 020h
         CALL MOVE_CURSOR
 
         MOV AH, 09h
@@ -551,7 +551,7 @@ title Calculator Project - GROUP 1
 
     PRINT_TRY_AGAIN_ERROR PROC  ; Ryoji
         MOV DH, 08h
-        MOV DL, 021h
+        MOV DL, 020h
         CALL MOVE_CURSOR
 
         MOV AH, 09h
