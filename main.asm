@@ -23,16 +23,16 @@ title Calculator Project - GROUP 1
     first_value     db 00h;
     second_value    db 00h;
     operation_value db 00h
-    answer_value    db 00h 
+    answer_value    db 0FFh     ; Default to Infinite
 
 .code
     ; [ Main Function ]
 
     MAIN PROC ; Aguirre
-        
         ; Initialize the data
         MOV AX, @data
         MOV DS, AX
+
         MainContinue:
             CALL CLEAR_SCREEN
             CALL DISPLAY_BOX
@@ -193,6 +193,14 @@ title Calculator Project - GROUP 1
     MUL_VALUE ENDP
 
     DIV_VALUE PROC
+        ; [!] If the divisor is '0' then set answer_value to 0FFh
+        ; [!] The HIGH of any register that will be set in answer_value i.e. AH, CH, or DH 
+        ;     should have either 00h or 01h to signify whether it's a negative or positive
+        ;     EXAMPLE:
+        ;       MOV AX, 0Bh;                    ; Assume the result of an operation
+        ;       MOV AH, 01h;                    ; A Negative Value
+        ;       MOV BX, OFFSET answer_value
+        ;       MOV [BX], AX
         ; PUT YOUR CODE HERE
     DIV_VALUE ENDP 
 
@@ -203,10 +211,22 @@ title Calculator Project - GROUP 1
         MOV BX, OFFSET answer_value
         MOV DX, [BX]
 
-        ; Compare if it's a negative of positive value
-        CMP DH, 01h
+        ; Comparing
+        CMP DL, 0FFh                        ; Check if the value is infinite
+        JE DisplayInfinite
+        CMP DH, 01h                         ; Check if the value is negative
         JE DisplayNegative
         JMP ContinueOperatorDisplay
+        DisplayInfinite:
+            ; Save Value
+            MOV AH, 02h
+            MOV DX, 'i'
+            INT 21h
+            MOV DX, 'n'
+            INT 21h
+            MOV DX, 'f'
+            INT 21h
+            JMP EndDigit
         DisplayNegative:
             PUSH DX                         ; Save Value
             MOV AH, 02h
