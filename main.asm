@@ -20,10 +20,10 @@ title Calculator Project - GROUP 1
     new_line        db 0ah, 0dh, '$'
     
     ; calculator number
-    first_number    db 0
-    second_number   db 0
+    first_value     db 0
+    second_value    db 0
     operation_value db 0 ; contains the hex of the operation
-    answer_number   db 0
+    answer_value    db 0
 
 .code
     ; [ Main Function ]
