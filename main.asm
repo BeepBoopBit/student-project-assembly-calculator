@@ -20,10 +20,10 @@ title Calculator Project - GROUP 1
     new_line        db 0ah, 0dh, '$'
     
     ; calculator number
-    first_value     db 35h;
-    second_value    db 39h;
-    operation_value db 0
-    answer_value    db 0 
+    first_value     db 00h;
+    second_value    db 00h;
+    operation_value db 00h
+    answer_value    db 00h 
 
 .code
     ; [ Main Function ]
@@ -33,8 +33,6 @@ title Calculator Project - GROUP 1
         ; Initialize the data
         MOV AX, @data
         MOV DS, AX
-        CALL ADD_VALUE
-        CALL DISPLAY_ANSWER
         MainContinue:
             CALL CLEAR_SCREEN
             CALL DISPLAY_BOX
@@ -87,8 +85,8 @@ title Calculator Project - GROUP 1
                 JMP MainStop
             MainStop:
                 ; terminate the program
-                MOV AH, 04Ch
-                INT 21h
+                 MOV AH, 04Ch
+                 INT 21h
     MAIN ENDP
 
     ; [ Box ]
@@ -150,13 +148,44 @@ title Calculator Project - GROUP 1
 
         ; Add Value and Save
         ADD AX, CX
+        MOV AH, 00h                     ; Signifies that it's a positive value
         MOV BX, offset answer_value
         MOV [BX], AX
         RET
     ADD_VALUE ENDP
 
-    SUB_VALUE PROC
-        ; PUT YOUR CODE HERE
+    SUB_VALUE PROC  ; Aguirre
+        ; Get the first number
+        MOV BX, offset first_value
+        MOV AX, [BX]
+
+        ; Get second number
+        MOV BX, offset second_value
+        MOV CX, [BX]
+
+        MOV AH, 00h ; reset
+        MOV CH, 00h ; reset
+        SUB AX, 30h
+        SUB CX, 30h
+        ; Subtract the values
+        SUB AX, CX
+
+        CMP AX, 0
+        JL NegativeValue
+        PositiveValue:
+            MOV AH, 00h                     ; Signifies that it's a positive value
+            MOV BX, offset answer_value
+            MOV [BX], AX
+            JMP SubtractionEnd
+        NegativeValue:
+            MOV CX, 0FFFFh
+            SUB CX, AX;
+            INC CX                          ; The value is less than one everytime when we have negative value
+            MOV CH, 01                      ; Signifies that It's a negative value
+            MOV BX, offset answer_value
+            MOV [BX], CX
+        SubtractionEnd:
+            RET
     SUB_VALUE ENDP
 
     MUL_VALUE PROC
@@ -173,47 +202,57 @@ title Calculator Project - GROUP 1
         ; Get the Answer
         MOV BX, OFFSET answer_value
         MOV DX, [BX]
-        MOV DH, 00h                     ; Reset value
-        
-        ; Compare if The value is LESS THAN OR EQUAL to 09h
-        CMP DL, 09h
-        JBE OneDigit
-        JMP TwoDigit
 
-        OneDigit:
-            ; Print it normally
+        ; Compare if it's a negative of positive value
+        CMP DH, 01h
+        JE DisplayNegative
+        JMP ContinueOperatorDisplay
+        DisplayNegative:
+            PUSH DX                         ; Save Value
             MOV AH, 02h
-            ADD DL, 30h
+            MOV DX, '-'
             INT 21h
-            JMP EndDigit
-        TwoDigit:
-            ; Divide the Digit By 10
-            MOV AX, 00h                 ; Reset
-            MOV AL, DL                  ; Get the value of DL (Divident)
-            MOV BX, 00h                 ; Reset
-            MOV BL, 0Ah                 ; Put 10 as value 
-            MOV DX, 00h                 ; Reset
-            DIV BX
-
-            ; Store the Values
-            PUSH DX                     ; Contains the Remainder 
-            PUSH AX                     ; Contains The Quotient
-
-            ; Print The Quotient
             POP DX
-            MOV AX, 00h                 ; Reset
-            MOV AH, 02h                 ; Function 2
-            MOV DH, 00H                 ; Reset
-            ADD DL, 30h                 ; Add 30h To make the value its ASCII Representation
-            INT 21h
-
-            ; Print The Remainder
-            POP DX
-            MOV DH, 00h                 ; Reset
-            ADD DL, 30h
-            INT 21h
-        EndDigit:
-            RET
+        ContinueOperatorDisplay:
+            ; Compare if The value is LESS THAN OR EQUAL to 09h
+            CMP DL, 09h
+            JBE OneDigit
+            JMP TwoDigit
+    
+            OneDigit:
+                ; Print it normally
+                MOV AH, 02h
+                ADD DL, 30h
+                INT 21h
+                JMP EndDigit
+            TwoDigit:
+                ; Divide the Digit By 10
+                MOV AX, 00h                 ; Reset
+                MOV AL, DL                  ; Get the value of DL (Divident)
+                MOV BX, 00h                 ; Reset
+                MOV BL, 0Ah                 ; Put 10 as value 
+                MOV DX, 00h                 ; Reset
+                DIV BX
+    
+                ; Store the Values
+                PUSH DX                     ; Contains the Remainder 
+                PUSH AX                     ; Contains The Quotient
+    
+                ; Print The Quotient
+                POP DX
+                MOV AX, 00h                 ; Reset
+                MOV AH, 02h                 ; Function 2
+                MOV DH, 00H                 ; Reset
+                ADD DL, 30h                 ; Add 30h To make the value its ASCII Representation
+                INT 21h
+    
+                ; Print The Remainder
+                POP DX
+                MOV DH, 00h                 ; Reset
+                ADD DL, 30h
+                INT 21h
+            EndDigit:
+                RET
     DISPLAY_ANSWER ENDP
 
     ; [ Auxiliary ]
