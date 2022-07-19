@@ -42,7 +42,7 @@ title Calculator Project - GROUP 1
             CALL DISPLAY_OPERATOR_PROMPT
             CALL ASK_FIRST
             CALL ASK_SECOND
-            CALL ASK_OPERATOR
+            CALL ASK_OPERATOR   ; [Do the Checking]
 
             ; Get the Operator [No Checking]
             MOV BX, OFFSET operation_value
@@ -368,7 +368,7 @@ title Calculator Project - GROUP 1
         RET
     ASK_INPUT ENDP
 
-    GET_ANSWER PROC
+    GET_ANSWER PROC ; Aguirre
         MOV BX, OFFSET answer_value
         MOV DX, [BX]
         RET
