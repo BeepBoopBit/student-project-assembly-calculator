@@ -2,30 +2,22 @@ title Calculator Project - GROUP 1
 .model small
 .stack
 .data
-    ; BF - ┐
-    ; C0 - └
-    ; D9 - ┘
-    ; DA - ┌
-    ; 7C - |
-    ; C4 - ─
-
-    first_ask       db "Enter the first number: $"
-    second_num      db "Enter the second number: $"
-    ope_prompt      db "'+' Add | '-' Subtract | '*' Multiply | '/' Divide $"
-    operation       db "Enter Operation: $" 
-    ans_prompt      db "The answer is: $"
-    end_prompt      db "Continue (y/n)? $"
-    err_operation   db "Wrong Operation Input: $"
-    err_integer     db "Wrong Integer Input: $"
+    first_prompt    db " Enter the first number :     $"
+    second_prompt   db " Enter the second number:     $"
+    operator_prompt db " Enter the operation    :     $" 
+    ans_prompt      db " Answer                 :     $"
+    end_prompt      db " Try Again (y/n)        :     $"
+    err_operation   db "Wrong Operation Input$"
+    err_integer     db "Wrong Integer Input$"
     new_line        db 0ah, 0dh, '$'
     
     ; calculator number
     first_value     db 39h
     second_value    db 39h
-    operation_value db 00h
+    operator_value  db 00h
     answer_value    db 0FFh     ; Default to Infinite
     remainder_value db 00h
-    value_flag      db 00h      ; tell if it's a negative
+    value_flag      db 00h      ; tell if it's a negative (01) or infinite (02)
 
 .code
     ; [ Main Function ]
@@ -34,21 +26,27 @@ title Calculator Project - GROUP 1
         ; Initialize the data
         MOV AX, @data
         MOV DS, AX
+        
         MainContinue:
+            ; Initialize Screen
             CALL CLEAR_SCREEN
-            CALL DISPLAY_BOX
+            MOV DH, 00h
+            MOV DL, 00h
+            CALL MOVE_CURSOR
+            
+            ; Calling the main procedures
             CALL DISPLAY_FIRST_PROMPT
-            CALL DISPLAY_SECOND_PROMPT
-            CALL DISPLAY_OPERATOR_PROMPT
             CALL ASK_FIRST
+            CALL DISPLAY_SECOND_PROMPT
             CALL ASK_SECOND
-            CALL ASK_OPERATOR   ; [Do the Checking]
+            CALL DISPLAY_OPERATOR_PROMPT
+            CALL ASK_OPERATOR
 
-            ; Get the Operator [No Checking]
-            MOV BX, OFFSET operation_value
+            ; Get the Operator 
+            MOV BX, OFFSET operator_value
             MOV AX, [BX]
 
-            ; Comparing
+            ; Comparing [No Checking]
             CMP AL, '+'
             JE AddFunction
             CMP AL, '-'
@@ -77,7 +75,9 @@ title Calculator Project - GROUP 1
 
                 ; Try Again
                 CALL DISPLAY_TRY_AGAIN_BOX
-                CALL DISPLAY_TRY_AGAIN
+                MOV DH, 09h
+                MOV DL, 1Bh
+                CALL MOVE_CURSOR
                 CALL ASK_INPUT
 
                 ; The program will stop if any value is entered other than 'y'
@@ -85,51 +85,191 @@ title Calculator Project - GROUP 1
                 JE MainContinue
                 JMP MainStop
             MainStop:
+                MOV DH, 0Bh
+                MOV DL, 00h
+                CALL MOVE_CURSOR
                 ; terminate the program
                  MOV AH, 04Ch
                  INT 21h
     MAIN ENDP
 
-    ; [ Box ]
-    DISPLAY_BOX PROC
-        ; PUT YOUR CODE HERE
-    DISPLAY_BOX ENDP
+    DISPLAY_FIRST_PROMPT PROC   ; Paul
+        CALL DISPLAY_TOP
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
 
-    DISPLAY_FIRST_PROMPT PROC
-        ; PUT YOUR CODE HERE
+        MOV AH, 09h
+        MOV DX, offset first_prompt
+        int 21h
+
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        CALL DISPLAY_NEWLINE
+        CALL DISPLAY_BOT
+        RET
     DISPLAY_FIRST_PROMPT ENDP
 
-    DISPLAY_SECOND_PROMPT PROC
-        ; PUT YOUR CODE HERE
+    DISPLAY_SECOND_PROMPT PROC  ; Paul
+        MOV DH, 02h
+        MOV DL, 00h
+        CALL MOVE_CURSOR
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        MOV AH, 09h
+        MOV DX, offset second_prompt
+        int 21h
+
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        CALL DISPLAY_NEWLINE
+        CALL DISPLAY_BOT
+        RET
     DISPLAY_SECOND_PROMPT ENDP
 
-    DISPALY_OPERATOR_PROMPT PROC
-        ; PUT YOUR CODE HERE
-    DISPALY_OPERATOR_PROMPT ENDP
+    DISPLAY_OPERATOR_PROMPT PROC ; paul
+        MOV DH, 03h
+        MOV DL, 00h
+        CALL MOVE_CURSOR
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        MOV AH, 09h
+        MOV DX, offset operator_prompt
+        int 21h
+
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        CALL DISPLAY_NEWLINE
+        CALL DISPLAY_BOT
+        RET
+    DISPLAY_OPERATOR_PROMPT ENDP
     
     DISPLAY_ANSWER_BOX PROC
-        ; INSERT CODE HERE    
+        MOV DH, 04h
+        MOV DL, 00h
+        CALL MOVE_CURSOR
+        CALL DISPLAY_BOT
+        CALL DISPLAY_TOP
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        MOV AH, 09h
+        MOV DX, offset ans_prompt
+        int 21h
+
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        CALL DISPLAY_NEWLINE
+        CALL DISPLAY_BOT
+        RET
     DISPLAY_ANSWER_BOX ENDP
     
     DISPLAY_TRY_AGAIN_BOX PROC
-        ; INSERT CODE HERE    
+        MOV DH, 08h
+        MOV DL, 00h
+        CALL MOVE_CURSOR
+        CALL DISPLAY_TOP
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        MOV AH, 09h
+        MOV DX, offset end_prompt
+        int 21h
+
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        CALL DISPLAY_NEWLINE
+        CALL DISPLAY_BOT
+        RET
     DISPLAY_TRY_AGAIN_BOX ENDP
     
-    DISPLAY_TRY_AGAIN PROC
-        ; INSERT CODE HERE    
-    DISPLAY_TRY_AGAIN ENDP
-    
     ; [ Prompts ]
-    ASK_FIRST PROC
-        ; PUT YOUR CODE HERE
+    ASK_FIRST PROC ; Ambraie
+        AskFirstAgain:
+            MOV DH, 01h
+            MOV DL, 01Bh
+            CALL RESET_CURSOR_VALUE
+
+            CALL ASK_INPUT
+            CMP AL, '0'
+            JB AskFirstAgain
+            CMP AL, '9'
+            JA AskFirstAgain
+
+            ; Store Value
+            MOV AH, 01h
+            MOV BX, OFFSET first_value
+            MOV [BX], AL
+            RET
     ASK_FIRST ENDP
     
-    ASK_SECOND PROC
-        ; PUT YOUR CODE HERE
+    ASK_SECOND PROC ; Ambraie
+        AskSecondAgain:
+            MOV DH, 02h
+            MOV DL, 01Bh
+            CALL RESET_CURSOR_VALUE
+
+            CALL ASK_INPUT
+            CMP AL, '0'
+            JB AskSecondAgain
+            CMP AL, '9'
+            JA AskSecondAgain
+
+            ; Store Value
+            MOV AH, 01h
+            MOV BX, OFFSET second_value
+            MOV [BX], AL
+            RET
     ASK_SECOND ENDP
     
     ASK_OPERATOR PROC
-        ; PUT YOUR CODE HERE
+        AskOperatorAgain:
+            MOV DH, 03h
+            MOV DL, 01Bh
+            CALL RESET_CURSOR_VALUE
+
+            CALL ASK_INPUT
+            CMP AL, '+'
+            JE OperatorContinue
+            CMP AL, '-'
+            JE OperatorContinue
+            CMP AL, '*'
+            JE OperatorContinue
+            CMP AL, '/'
+            JE OperatorContinue
+            JMP AskOperatorAgain
+            OperatorContinue:
+                ; Store Value
+                MOV AH, 01h
+                MOV BX, OFFSET operator_value
+                MOV [BX], AL
+                RET
     ASK_OPERATOR ENDP
 
     ; [ Operations ]
@@ -255,6 +395,11 @@ title Calculator Project - GROUP 1
     ; [ Printing ]
 
     DISPLAY_ANSWER PROC ; Aguirre
+        
+        MOV DH, 06h
+        MOV DL, 01Bh
+        CALL MOVE_CURSOR
+
         ; Get the flag
         MOV BX, OFFSET value_flag
         MOV DX,[BX]
@@ -350,6 +495,18 @@ title Calculator Project - GROUP 1
         RET
     MOVE_CURSOR ENDP
 
+    ; Assumes that DL and DH are already been configured
+    RESET_CURSOR_VALUE PROC ; Aguirre
+        CALL MOVE_CURSOR
+        PUSH DX
+        MOV AH, 02h
+        MOV DL, ' '
+        INT 21h
+        POP DX
+        CALL MOVE_CURSOR
+        RET
+    RESET_CURSOR_VALUE ENDP
+
     CLEAR_SCREEN PROC ; Aguirre
         MOV AH, 06h
         MOV AL, 00h
@@ -373,4 +530,57 @@ title Calculator Project - GROUP 1
         MOV DX, [BX]
         RET
     GET_ANSWER ENDP
+
+    DISPLAY_TOP PROC ; Aguirre
+        ; DA - ┌
+        MOV AH, 02h
+        MOV DL, 0DAh
+        INT 21h
+        
+        ; C4 - ─
+        mov CX, 30
+        MOV DL, 0C4h
+        TopDisplayCharacterLoop:
+            INT 21h
+            loop TopDisplayCharacterLoop
+        
+        ; BF - ┐
+        MOV DL, 0BFh
+        INT 21h    
+
+        MOV AH, 09h
+        MOV DX, offset new_line
+        INT 21h
+        RET
+    DISPLAY_TOP ENDP
+
+    DISPLAY_BOT PROC ; Aguirre
+        ; C0 - └
+        MOV AH, 02h
+        MOV DL, 0C0h
+        INT 21h
+        
+        ; C4 - ─
+        mov CX, 30
+        MOV DL, 0C4h
+        BotDisplayCharacterLoop:
+            INT 21h
+            loop BotDisplayCharacterLoop
+        
+        ; D9 - ┘
+        MOV DL, 0D9h
+        INT 21h    
+
+        MOV AH, 09h
+        MOV DX, offset new_line
+        INT 21h
+        RET
+    DISPLAY_BOT ENDP
+
+    DISPLAY_NEWLINE PROC
+        MOV AH, 09h
+        MOV DX, offset new_line
+        INT 21h
+        RET
+    DISPLAY_NEWLINE ENDP
 end MAIN
