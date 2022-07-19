@@ -22,13 +22,14 @@ title Calculator Project - GROUP 1
     ; calculator number
     first_value     db 0
     second_value    db 0
-    operation_value db 0 ; contains the hex of the operation
-    answer_value    db 0
+    operation_value db 0
+    answer_value    db 0 
 
 .code
     ; [ Main Function ]
 
     MAIN PROC
+        
         ; initialize the data
         MOV AX, @data
         MOV DS, AX
@@ -41,7 +42,9 @@ title Calculator Project - GROUP 1
             CALL ASK_FIRST
             CALL ASK_SECOND
             CALL ASK_OPERATOR
-        
+
+            ; [!] Implement [ Operation ]
+            CALL DISPLAY_ANSWER
             ; [!] Implement Try Again
             JE MainContinue
 
@@ -99,8 +102,50 @@ title Calculator Project - GROUP 1
 
     ; [ Printing ]
 
-    DISPLAY_ANSWER PROC
-        ; PUT YOUR CODE HERE
+    DISPLAY_ANSWER PROC ; Aguirre
+        ; get the value of first_value
+        MOV BX, OFFSET answer_value
+        MOV DX, [BX]
+        MOV DH, 00h                     ; Reset value
+        
+        CMP DL, 09h
+        JBE OneDigit
+        JMP TwoDigit
+
+        OneDigit:
+            ; Print it normally
+            MOV AH, 02h
+            ADD DL, 30h
+            INT 21h
+            JMP EndDigit
+        TwoDigit:
+            ; Divide the Digit By 10
+            MOV AX, 00h                 ; Reset
+            MOV AL, DL                  ; Get the value of DL (Divident)
+            MOV BX, 00h                 ; Reset
+            MOV BL, 0Ah                 ; Put 10 as value 
+            MOV DX, 00h                 ; Reset
+            DIV BX
+
+            ; Store the Values
+            PUSH DX                     ; Contains the Remainder 
+            PUSH AX                     ; Contains The Quotient
+
+            ; Print The Quotient
+            POP DX
+            MOV AX, 00h                 ; Reset
+            MOV AH, 02h                 ; Function 2
+            MOV DH, 00H                 ; Reset
+            ADD DL, 30h                 ; Add 30h To make the value its ASCII Representation
+            INT 21h
+
+            ; Print The Remainder
+            POP DX
+            MOV DH, 00h                 ; Reset
+            ADD DL, 30h
+            INT 21h
+        EndDigit:
+            RET
     DISPLAY_ANSWER ENDP
 
     ; [ Auxiliary ]
