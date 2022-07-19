@@ -1,257 +1,127 @@
+title Calculator Project - GROUP 1
 .model small
 .stack
 .data
- 
-    first_num       db "Enter the first number: $"
+    ; BF - ┐
+    ; C0 - └
+    ; D9 - ┘
+    ; DA - ┌
+    ; 7C - |
+    ; C4 - ─
+
+    first_ask       db "Enter the first number: $"
     second_num      db "Enter the second number: $"
     ope_prompt      db "'+' Add | '-' Subtract | '*' Multiply | '/' Divide $"
     operation       db "Enter Operation: $" 
     ans_prompt      db "The answer is: $"
     end_prompt      db "Continue (y/n)? $"
-    err1_prompt     db "Wrong Operation Input: $"
-    err2_prompt     db "Wrong Integer Input: $"
+    err_operation   db "Wrong Operation Input: $"
+    err_integer     db "Wrong Integer Input: $"
     new_line        db 0ah, 0dh, '$'
+    
+    ; calculator number
     first_number    db 0
     second_number   db 0
+    operation_value db 0 ; contains the hex of the operation
     answer_number   db 0
 
 .code
-main proc
-    mov ax, @data
-    mov ds, ax
+    ; [ Main Function ]
+
+    MAIN PROC
+        ; initialize the data
+        MOV AX, @data
+        MOV DS, AX
+        MainContinue:
+            CALL CLEAR_SCREEN
+            CALL DISPLAY_BOX
+            CALL DISPLAY_FIRST_PROMPT
+            CALL DISPLAY_SECOND_PROMPT
+            CALL DISPALY_OPERATOR_PROMPT
+            CALL ASK_FIRST
+            CALL ASK_SECOND
+            CALL ASK_OPERATOR
+        
+            ; [!] Implement Try Again
+            JE MainContinue
+
+        ; terminate the program
+        MOV AH, 04Ch
+        INT 21h
+    MAIN ENDP
+
+    ; [ Box ]
+    DISPLAY_BOX PROC
+        ; PUT YOUR CODE HERE
+    DISPLAY_BOX ENDP
+
+    DISPLAY_FIRST_PROMPT PROC
+        ; PUT YOUR CODE HERE
+    DISPLAY_FIRST_PROMPT ENDP
+
+    DISPLAY_SECOND_PROMPT PROC
+        ; PUT YOUR CODE HERE
+    DISPLAY_SECOND_PROMPT ENDP
+
+    DISPALY_OPERATOR_PROMPT PROC
+        ; PUT YOUR CODE HERE
+    DISPALY_OPERATOR_PROMPT ENDP
+
+    ; [ Prompts ]
+    ASK_FIRST PROC
+        ; PUT YOUR CODE HERE
+    ASK_FIRST ENDP
     
-    ; clear Screen
-    mov ah, 06h
-    mov al, 0
-    mov bh, 7
-    mov ch, 0
-    mov cl, 0
-    mov dh, 24
-    mov dl, 79
-    int 10h
+    ASK_SECOND PROC
+        ; PUT YOUR CODE HERE
+    ASK_SECOND ENDP
+    
+    ASK_OPERATOR PROC
+        ; PUT YOUR CODE HERE
+    ASK_OPERATOR ENDP
 
-MainProgram:
-    ; prompt 'firstNum' message
-    Check_first:
-        mov ah, 09h
-        mov dx, offset new_line
-        int 21h
-        mov dx, offset first_num
-        int 21h
-        
-        ; get input
-        mov ah, 01h
-        int 21h
+    ; [ Operations ]
+    ADD_VALUE PROC
+        ; PUT YOUR CODE HERE
+    ADD_VALUE ENDP
 
-        mov ah, 09h        
-        mov dx, offset new_line
-        int 21h
+    SUB_VALUE PROC
+        ; PUT YOUR CODE HERE
+    SUB_VALUE ENDP
 
-        ; check number if out of bound
-        CMP al, '0'
-        JB Check_first              
-        CMP al, '9'
-        JA check_first
-        
-        ; store
-        mov ah, 0
-        mov bx, offset first_number
-        mov [bx], al
-    Check_second:
-        mov ah, 09h
-        mov dx, offset second_num
-        int 21h
+    MUL_VALUE PROC
+        ; PUT YOUR CODE HERE
+    MUL_VALUE ENDP
 
-        ; get input
-        mov ah, 01h
-        int 21h
+    DIV_VALUE PROC
+        ; PUT YOUR CODE HERE
+    DIV_VALUE ENDP 
 
-        mov ah, 09h 
-        mov dx, offset new_line
-        int 21h
+    ; [ Printing ]
 
-        ; check number if out of bound
-        CMP al, '0'
-        JB Check_second
-        CMP al, '9'
-        JA Check_second
+    DISPLAY_ANSWER PROC
+        ; PUT YOUR CODE HERE
+    DISPLAY_ANSWER ENDP
 
-        ; store
-        mov ah, 0
-        mov bx, offset second_number
-        mov [bx], al
-        
-        ; print new line
-        mov ah, 09h 
-        mov dx, offset new_line
-        int 21h
+    ; [ Auxiliary ]
 
-    Check_operation:
-        mov ah, 09h
-        mov dx, offset ope_prompt
-        int 21h
-        mov dx, offset new_line
-        int 21h
-        mov dx, offset operation
-        int 21h
+    ; Assumes that DL and DH are already been configured
+    MOVE_CURSOR PROC
+        MOV AH, 02h
+        MOV BH, 00h
+        INT 10H
+        RET
+    MOVE_CURSOR ENDP
 
-        ; get input
-        mov ah, 01h
-        int 21h
-
-        mov ah, 09h 
-        mov dx, offset new_line
-        int 21h
-
-        ; check if basic operations
-        CMP al, '+'
-        JE Addition_relative
-        CMP al, '-'
-        JE Subtraction_relative
-        CMP al, '/'
-        JE Division_relative
-        CMP al, '*'
-        JE Multiplication_relative 
-
-        ; check if input is correct 
-        CMP al, '*'
-        JB Operation_Error 
-        CMP al, '/'
-        JA Operation_Error
-        JMP Check_operation
-
-        ;Operation Input Erorr Check 
-        Operation_Error:
-        lea dx, err2_prompt
-        mov ah, 09h ;output string ds:dx
-        int 21h
-
-
-    Main_relative:
-        JMP MainProgram
-
-    Answer:
-        mov ah, 09h 
-        mov dx, offset new_line
-        int 21h
-
-        mov ah, 09h 
-        mov dx, offset ans_prompt
-        int 21h
-
-
-        ; get the answer
-        mov bx, offset answer_number
-        mov ax, [bx]
-        ; get the data
-        push ax
-
-        ; compare if double digit or single digit
-        mov ah, 00h
-        cmp al, 0Ah;
-        JAE DoubleDigit
-        JMP SingleDigit
-
-        DoubleDigit:
-            mov ah, 02h
-            mov dl, '1'
-            int 21h
-            pop dx
-            sub dl, 10 ; currently 98
-            add dl, 30h ; currently 30
-            mov ah, 02h
-            int 21h
-            jmp NoSingleDigit
-
-        SingleDigit:
-            mov ah, 02h
-            mov dl, al
-            add dl, 30h
-            int 21h
-
-        NoSingleDigit:
-            mov ah, 09h 
-            mov dx, offset new_line
-            int 21h
-            jmp Continue;
-
-    Addition_relative:
-        jmp Addition
-    Subtraction_relative:
-        jmp Subtraction
-    Multiplication_relative:
-        jmp Multiplication
-    Division_relative:
-        jmp Division
-
-
-    Continue:
-        mov ah, 09h 
-        mov dx, offset end_prompt
-        int 21h
-        
-        ; get input
-        mov ah, 01h
-        int 21h
-
-        mov ah, 09h 
-        mov dx, offset new_line
-        int 21h
-        
-        ; check if (y/n)
-        CMP al, 'y'
-        JE Main_relative
-        CMP al, 'n'
-        JE Exit
-
-        JMP Continue
-        
-        Exit:
-            mov ah, 4ch
-            int 21h
-
-
-    ; basic operation function
-    Addition:
-
-        mov bx, offset first_number
-        mov ax, [bx]
-
-        mov bx, offset second_number
-        mov cx, [bx]
-
-        mov ah, 0 ; reset
-        mov ch, 0 ; reset
-        sub ax, 30h
-        sub cx, 30h
-
-        ; add value
-        add ax, cx
-        mov bx, offset answer_number
-        mov [bx], ax
-
-        ; call answer
-        JMP Answer
-
-    Subtraction:
-
-        ; your code here
-
-        JMP Answer
-
-    Division:
-
-        ; your code here
-
-        JMP Answer
-
-    Multiplication:
-
-        ; your code here
-
-        JMP Answer
-
-main endp
-end main
-
-C:\Users\Ryoji\Desktop\assembly-calculator
+    CLEAR_SCREEN PROC
+        MOV AH, 06h
+        MOV AL, 00h
+        MOV BH, 00000111b
+        MOV CH, 00h         ; ROW
+        MOV CL, 00h         ; COL
+        MOV DH, 19h         ; ROW
+        MOV DL, 4Fh         ; COL
+        INT 10h
+        RET
+    CLEAR_SCREEN ENDP
+end MAIN
