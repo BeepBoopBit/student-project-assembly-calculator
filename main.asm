@@ -97,6 +97,8 @@ title Calculator Project - GROUP 1
                 ; The program will stop if any value is entered other than 'y'
                 CMP AL, 'y'
                 JE MainContinue
+                CMP AL, 'Y'
+                JE MainContinue
                 JMP MainStop
             MainStop:
                 MOV DH, 0Bh
