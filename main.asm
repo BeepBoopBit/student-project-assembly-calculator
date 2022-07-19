@@ -20,10 +20,12 @@ title Calculator Project - GROUP 1
     new_line        db 0ah, 0dh, '$'
     
     ; calculator number
-    first_value     db 00h;
-    second_value    db 00h;
+    first_value     db 39h
+    second_value    db 39h
     operation_value db 00h
     answer_value    db 0FFh     ; Default to Infinite
+    remainder_value db 00h
+    value_flag      db 00h      ; tell if it's a negative
 
 .code
     ; [ Main Function ]
@@ -32,7 +34,6 @@ title Calculator Project - GROUP 1
         ; Initialize the data
         MOV AX, @data
         MOV DS, AX
-
         MainContinue:
             CALL CLEAR_SCREEN
             CALL DISPLAY_BOX
@@ -148,7 +149,6 @@ title Calculator Project - GROUP 1
 
         ; Add Value and Save
         ADD AX, CX
-        MOV AH, 00h                     ; Signifies that it's a positive value
         MOV BX, offset answer_value
         MOV [BX], AX
         RET
@@ -181,41 +181,90 @@ title Calculator Project - GROUP 1
             MOV CX, 0FFFFh
             SUB CX, AX;
             INC CX                          ; The value is less than one everytime when we have negative value
-            MOV CH, 01                      ; Signifies that It's a negative value
             MOV BX, offset answer_value
             MOV [BX], CX
+
+            ; Assing Flag
+            MOV BX, OFFSET value_flag
+            MOV AX, 01h
+            MOV [BX], AX                   ; 01h indicates that it's a negative value
         SubtractionEnd:
             RET
     SUB_VALUE ENDP
 
-    MUL_VALUE PROC
-        ; PUT YOUR CODE HERE
+    MUL_VALUE PROC ; Aguirre
+        ; Get the first number
+        MOV BX, offset first_value
+        MOV AX, [BX]
+
+        ; Get second number
+        MOV BX, offset second_value
+        MOV CX, [BX]
+
+        MOV AH, 00h                     ; reset
+        MOV CH, 00h                     ; reset
+        SUB AX, 30h
+        SUB CX, 30h
+        MOV BX, CX                      ; put the Multiplier in position
+
+        ; Add Value and Save
+        MUL BX
+        MOV BX, offset answer_value
+        MOV [BX], AX
+        RET
     MUL_VALUE ENDP
 
-    DIV_VALUE PROC
-        ; [!] If the divisor is '0' then set answer_value to 0FFh
-        ; [!] The HIGH of any register that will be set in answer_value i.e. AH, CH, or DH 
-        ;     should have either 00h or 01h to signify whether it's a negative or positive
-        ;     EXAMPLE:
-        ;       MOV AX, 0Bh;                    ; Assume the result of an operation
-        ;       MOV AH, 01h;                    ; A Negative Value
-        ;       MOV BX, OFFSET answer_value
-        ;       MOV [BX], AX
-        ; PUT YOUR CODE HERE
+    DIV_VALUE PROC ; Aguirre
+        ; Get the first number
+        MOV BX, offset first_value
+        MOV AX, [BX]
+
+        ; Get second number
+        MOV BX, offset second_value
+        MOV CX, [BX]
+
+        MOV AH, 00h                     ; Reset
+        MOV CH, 00h                     ; Reset
+        MOV DX, 00h                     ; Reset
+
+        CMP CL, 30h
+        JE InfiniteValue
+        JMP NonInfinite
+        InfiniteValue:
+            MOV BX, OFFSET value_flag
+            MOV AX, 02h
+            MOV [BX], AX
+            JMP DivisionEnd
+        NonInfinite:
+            SUB AX, 30h
+            SUB CX, 30h
+            MOV BX, CX                      ; Put the Multiplier in position
+    
+            ; Add Value and Save
+            DIV BX
+            MOV AH, 00h                     ; Signifies that it's a positive value
+            MOV DH, 00h                     ; Signifies that it's a positive value
+            MOV BX, offset answer_value
+            MOV [BX], AX
+            MOV BX, offset remainder_value
+            mov [BX], DX
+        DivisionEnd:
+            RET
     DIV_VALUE ENDP 
 
     ; [ Printing ]
 
     DISPLAY_ANSWER PROC ; Aguirre
-        ; Get the Answer
-        MOV BX, OFFSET answer_value
-        MOV DX, [BX]
+        ; Get the flag
+        MOV BX, OFFSET value_flag
+        MOV DX,[BX]
 
         ; Comparing
-        CMP DL, 0FFh                        ; Check if the value is infinite
-        JE DisplayInfinite
-        CMP DH, 01h                         ; Check if the value is negative
+        CMP DL, 01h                         ; Check if the value is negative
         JE DisplayNegative
+        CMP DL, 02h                        ; Check if the value is infinite
+        CALL GET_ANSWER
+        JE DisplayInfinite
         JMP ContinueOperatorDisplay
         DisplayInfinite:
             ; Save Value
@@ -238,7 +287,6 @@ title Calculator Project - GROUP 1
             CMP DL, 09h
             JBE OneDigit
             JMP TwoDigit
-    
             OneDigit:
                 ; Print it normally
                 MOV AH, 02h
@@ -272,7 +320,24 @@ title Calculator Project - GROUP 1
                 ADD DL, 30h
                 INT 21h
             EndDigit:
-                RET
+                ; Get remainder
+                MOV BX, OFFSET remainder_value
+                MOV AX, [BX]
+
+                MOV AH, 00h                 ; Reset
+                CMP AX, 00h
+                JA RemainderExists 
+                JMP EndRemainder
+                RemainderExists:
+                    PUSH AX                 ; Save value
+                    MOV AH, 02h
+                    MOV DX, 'r'
+                    INT 21h
+                    POP DX
+                    ADD DX, 30h             ; Add 30h To make the value its ASCII Representation
+                    INT 21h
+                EndRemainder:
+                    RET
     DISPLAY_ANSWER ENDP
 
     ; [ Auxiliary ]
@@ -302,4 +367,10 @@ title Calculator Project - GROUP 1
         INT 21h
         RET
     ASK_INPUT ENDP
+
+    GET_ANSWER PROC
+        MOV BX, OFFSET answer_value
+        MOV DX, [BX]
+        RET
+    GET_ANSWER ENDP
 end MAIN
