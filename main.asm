@@ -20,8 +20,8 @@ title Calculator Project - GROUP 1
     new_line        db 0ah, 0dh, '$'
     
     ; calculator number
-    first_value     db 0
-    second_value    db 0
+    first_value     db 35h;
+    second_value    db 39h;
     operation_value db 0
     answer_value    db 0 
 
@@ -33,6 +33,8 @@ title Calculator Project - GROUP 1
         ; Initialize the data
         MOV AX, @data
         MOV DS, AX
+        CALL ADD_VALUE
+        CALL DISPLAY_ANSWER
         MainContinue:
             CALL CLEAR_SCREEN
             CALL DISPLAY_BOX
@@ -132,8 +134,25 @@ title Calculator Project - GROUP 1
     ASK_OPERATOR ENDP
 
     ; [ Operations ]
-    ADD_VALUE PROC
-        ; PUT YOUR CODE HERE
+    ADD_VALUE PROC  ; Aguirre
+        ; Get the first number
+        MOV BX, offset first_value
+        MOV AX, [BX]
+
+        ; Get second number
+        MOV BX, offset second_value
+        MOV CX, [BX]
+
+        MOV AH, 00h ; reset
+        MOV CH, 00h ; reset
+        SUB AX, 30h
+        SUB CX, 30h
+
+        ; Add Value and Save
+        ADD AX, CX
+        MOV BX, offset answer_value
+        MOV [BX], AX
+        RET
     ADD_VALUE ENDP
 
     SUB_VALUE PROC
