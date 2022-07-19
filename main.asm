@@ -28,9 +28,9 @@ title Calculator Project - GROUP 1
 .code
     ; [ Main Function ]
 
-    MAIN PROC
+    MAIN PROC ; Aguirre
         
-        ; initialize the data
+        ; Initialize the data
         MOV AX, @data
         MOV DS, AX
         MainContinue:
@@ -38,19 +38,55 @@ title Calculator Project - GROUP 1
             CALL DISPLAY_BOX
             CALL DISPLAY_FIRST_PROMPT
             CALL DISPLAY_SECOND_PROMPT
-            CALL DISPALY_OPERATOR_PROMPT
+            CALL DISPLAY_OPERATOR_PROMPT
             CALL ASK_FIRST
             CALL ASK_SECOND
             CALL ASK_OPERATOR
 
-            ; [!] Implement [ Operation ]
-            CALL DISPLAY_ANSWER
-            ; [!] Implement Try Again
-            JE MainContinue
+            ; Get the Operator [No Checking]
+            MOV BX, OFFSET operation_value
+            MOV AX, [BX]
 
-        ; terminate the program
-        MOV AH, 04Ch
-        INT 21h
+            ; Comparing
+            CMP AL, '+'
+            JE AddFunction
+            CMP AL, '-'
+            JE SubFunction
+            CMP AL, '*'
+            JE MulFunction
+            CMP AL, '/'
+            JE DivFunction
+            
+            ; Functions
+            AddFunction:
+                CALL ADD_VALUE
+                JMP CompareContine
+            SubFunction:
+                CALL SUB_VALUE
+                JMP CompareContine
+            MulFunction:
+                CALL MUL_VALUE
+                JMP CompareContine
+            DivFunction:
+                CALL DIV_VALUE
+            CompareContine:
+                ; Answer
+                CALL DISPLAY_ANSWER_BOX
+                CALL DISPLAY_ANSWER
+
+                ; Try Again
+                CALL DISPLAY_TRY_AGAIN_BOX
+                CALL DISPLAY_TRY_AGAIN
+                CALL ASK_INPUT
+
+                ; The program will stop if any value is entered other than 'y'
+                CMP AL, 'y'
+                JE MainContinue
+                JMP MainStop
+            MainStop:
+                ; terminate the program
+                MOV AH, 04Ch
+                INT 21h
     MAIN ENDP
 
     ; [ Box ]
@@ -69,7 +105,19 @@ title Calculator Project - GROUP 1
     DISPALY_OPERATOR_PROMPT PROC
         ; PUT YOUR CODE HERE
     DISPALY_OPERATOR_PROMPT ENDP
-
+    
+    DISPLAY_ANSWER_BOX PROC
+        ; INSERT CODE HERE    
+    DISPLAY_ANSWER_BOX ENDP
+    
+    DISPLAY_TRY_AGAIN_BOX PROC
+        ; INSERT CODE HERE    
+    DISPLAY_TRY_AGAIN_BOX ENDP
+    
+    DISPLAY_TRY_AGAIN PROC
+        ; INSERT CODE HERE    
+    DISPLAY_TRY_AGAIN ENDP
+    
     ; [ Prompts ]
     ASK_FIRST PROC
         ; PUT YOUR CODE HERE
@@ -103,11 +151,12 @@ title Calculator Project - GROUP 1
     ; [ Printing ]
 
     DISPLAY_ANSWER PROC ; Aguirre
-        ; get the value of first_value
+        ; Get the Answer
         MOV BX, OFFSET answer_value
         MOV DX, [BX]
         MOV DH, 00h                     ; Reset value
         
+        ; Compare if The value is LESS THAN OR EQUAL to 09h
         CMP DL, 09h
         JBE OneDigit
         JMP TwoDigit
@@ -151,14 +200,14 @@ title Calculator Project - GROUP 1
     ; [ Auxiliary ]
 
     ; Assumes that DL and DH are already been configured
-    MOVE_CURSOR PROC
+    MOVE_CURSOR PROC ; Aguirre
         MOV AH, 02h
         MOV BH, 00h
         INT 10H
         RET
     MOVE_CURSOR ENDP
 
-    CLEAR_SCREEN PROC
+    CLEAR_SCREEN PROC ; Aguirre
         MOV AH, 06h
         MOV AL, 00h
         MOV BH, 00000111b
@@ -169,4 +218,10 @@ title Calculator Project - GROUP 1
         INT 10h
         RET
     CLEAR_SCREEN ENDP
+
+    ASK_INPUT PROC  ; Aguirre
+        MOV AH, 01h
+        INT 21h
+        RET
+    ASK_INPUT ENDP
 end MAIN
