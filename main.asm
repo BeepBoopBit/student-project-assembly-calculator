@@ -23,7 +23,7 @@ title Calculator Project - GROUP 1
     ; 0111 -> Wrong Input Second Number
     ; 1001 -> Wrong Input Try Again
     err_flag        db 0000b  
-    err_input   db " [!] Wrong Input$"
+    err_input       db " [!] Wrong Input$"
 
     ; Calculation Variables
     first_value     db 32h
@@ -41,8 +41,9 @@ title Calculator Project - GROUP 1
         MOV AX, @data
         MOV DS, AX
         MainContinue:
-            CALL RESET_VALUE
+        
             ; Initialize Screen
+            CALL RESET_VALUE
             CALL CLEAR_SCREEN
             MOV DH, 00h
             MOV DL, 00h
@@ -859,7 +860,7 @@ title Calculator Project - GROUP 1
 
     RESET_VALUE ENDP
 
-    RESET_REGISTER PROC ; Aguirre
+    RESET_REGISTER PROC ; Aguirreg
         MOV AX, 00h
         MOV BX, 00h
         MOV CX, 00h
