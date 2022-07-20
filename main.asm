@@ -105,8 +105,8 @@ title Calculator Project - GROUP 1
                 MOV DL, 00h
                 CALL MOVE_CURSOR
                 ; terminate the program
-                 MOV AH, 04Ch
-                 INT 21h
+                MOV AH, 04Ch
+                INT 21h
     MAIN ENDP
 
 
@@ -563,7 +563,7 @@ title Calculator Project - GROUP 1
         RET
     PRINT_TRY_AGAIN_ERROR ENDP
 
-    CLEAR_OPERATOR PROC  ; Ryoji
+    CLEAR_OPERATOR PROC  ; Hans
         ; get error value
         MOV BX, OFFSET err_flag
         MOV AX, [BX]
@@ -592,7 +592,7 @@ title Calculator Project - GROUP 1
             RET
     CLEAR_OPERATOR ENDP
 
-    PRINT_OPERATOR_CLEAR PROC  ; Ryoji
+    PRINT_OPERATOR_CLEAR PROC  ; Hans
         MOV DH, 03h
         MOV DL, 021h
         CALL MOVE_CURSOR
@@ -603,7 +603,7 @@ title Calculator Project - GROUP 1
         RET
     PRINT_OPERATOR_CLEAR ENDP
 
-    PRINT_FIRST_NUMBER_CLEAR PROC  ; Ryoji
+    PRINT_FIRST_NUMBER_CLEAR PROC  ; Hans
         MOV DH, 01h
         MOV DL, 021h
         CALL MOVE_CURSOR
@@ -614,7 +614,7 @@ title Calculator Project - GROUP 1
         RET
     PRINT_FIRST_NUMBER_CLEAR ENDP
 
-    PRINT_SECOND_NUMBER_CLEAR PROC  ; Ryoji
+    PRINT_SECOND_NUMBER_CLEAR PROC  ; Hans
         MOV DH, 02h
         MOV DL, 021h
         CALL MOVE_CURSOR
@@ -625,7 +625,7 @@ title Calculator Project - GROUP 1
         RET
     PRINT_SECOND_NUMBER_CLEAR ENDP
 
-    PRINT_TRY_AGAIN_CLEAR PROC  ; Ryoji
+    PRINT_TRY_AGAIN_CLEAR PROC  ; Hans
         MOV DH, 08h
         MOV DL, 021h
         CALL MOVE_CURSOR
@@ -859,7 +859,7 @@ title Calculator Project - GROUP 1
 
     RESET_VALUE ENDP
 
-    RESET_REGISTER PROC
+    RESET_REGISTER PROC ; Aguirre
         MOV AX, 00h
         MOV BX, 00h
         MOV CX, 00h
