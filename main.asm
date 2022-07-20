@@ -2,7 +2,7 @@ title Calculator Project - GROUP 1
 .model small
 .stack
 .data
-    ; Prompt Vraible
+    ; Prompt Variable
     first_prompt    db " Enter the first number :     $"
     second_prompt   db " Enter the second number:     $"
     operator_prompt db " Enter the operation    :     $" 
@@ -860,7 +860,7 @@ title Calculator Project - GROUP 1
 
     RESET_VALUE ENDP
 
-    RESET_REGISTER PROC ; Aguirreg
+    RESET_REGISTER PROC ; Aguirre
         MOV AX, 00h
         MOV BX, 00h
         MOV CX, 00h
