@@ -13,7 +13,7 @@ title Calculator Project - GROUP 1
     ; Support Prompts
     sup_operator    db " [ + | - | * | / ] $"
     sup_number      db " [ 0 - 9 ]$"
-    sup_try_again   db " [ Y | y | N | n ] $"
+    sup_try_again   db " [ Y | y | Any Value (exit) ] $"
     sup_clear_error db "                                  $"
 
     ; Errors Variables
