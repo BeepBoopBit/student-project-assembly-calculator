@@ -26,8 +26,8 @@ title Calculator Project - GROUP 1
     err_input   db " [!] Wrong Input$"
 
     ; Calculation Variables
-    first_value     db 39h
-    second_value    db 32h
+    first_value     db 32h
+    second_value    db 39h
     operator_value  db 00h
     answer_value    db 0FFh     ; Default to Infinite
     remainder_value db 00h
@@ -411,8 +411,8 @@ title Calculator Project - GROUP 1
 
             ; Assing Flag
             MOV BX, OFFSET value_flag
-            MOV AX, 01h
-            MOV [BX], AX                   ; 01h indicates that it's a negative value
+            MOV AX, 01h                     ; 01h indicates that it's a negative value
+            MOV [BX], AX                   
         SubtractionEnd:
             RET
     SUB_VALUE ENDP
@@ -653,7 +653,6 @@ title Calculator Project - GROUP 1
         CMP DL, 01h                         ; Check if the value is negative
         JE DisplayNegative
         CMP DL, 02h                        ; Check if the value is infinite
-        CALL GET_ANSWER
         JE DisplayInfinite
         JMP ContinueOperatorDisplay
         DisplayInfinite:
@@ -667,12 +666,11 @@ title Calculator Project - GROUP 1
             INT 21h
             JMP EndDigit
         DisplayNegative:
-            PUSH DX                         ; Save Value
             MOV AH, 02h
             MOV DX, '-'
             INT 21h
-            POP DX
         ContinueOperatorDisplay:
+            CALL GET_ANSWER
             ; Compare if The value is LESS THAN OR EQUAL to 09h
             CMP DL, 09h
             JBE OneDigit
