@@ -2,7 +2,7 @@ title Calculator Project - GROUP 1
 .model small
 .stack
 .data
-    ; Prompt Vraible
+    ; Prompt Variable
     first_prompt    db " Enter the first number :     $"
     second_prompt   db " Enter the second number:     $"
     operator_prompt db " Enter the operation    :     $" 
@@ -13,7 +13,7 @@ title Calculator Project - GROUP 1
     ; Support Prompts
     sup_operator    db " [ + | - | * | / ] $"
     sup_number      db " [ 0 - 9 ]$"
-    sup_try_again   db " [ Y | y | N | n ] $"
+    sup_try_again   db " [ Y | y | Any Value (exit) ] $"
     sup_clear_error db "                                  $"
 
     ; Errors Variables
@@ -23,11 +23,11 @@ title Calculator Project - GROUP 1
     ; 0111 -> Wrong Input Second Number
     ; 1001 -> Wrong Input Try Again
     err_flag        db 0000b  
-    err_input   db "[!] Wrong Input$"
+    err_input       db " [!] Wrong Input$"
 
     ; Calculation Variables
-    first_value     db 39h
-    second_value    db 32h
+    first_value     db 32h
+    second_value    db 39h
     operator_value  db 00h
     answer_value    db 0FFh     ; Default to Infinite
     remainder_value db 00h
@@ -41,8 +41,9 @@ title Calculator Project - GROUP 1
         MOV AX, @data
         MOV DS, AX
         MainContinue:
-            CALL RESET_VALUE
+        
             ; Initialize Screen
+            CALL RESET_VALUE
             CALL CLEAR_SCREEN
             MOV DH, 00h
             MOV DL, 00h
@@ -97,14 +98,16 @@ title Calculator Project - GROUP 1
                 ; The program will stop if any value is entered other than 'y'
                 CMP AL, 'y'
                 JE MainContinue
+                CMP AL, 'Y'
+                JE MainContinue
                 JMP MainStop
             MainStop:
                 MOV DH, 0Bh
                 MOV DL, 00h
                 CALL MOVE_CURSOR
                 ; terminate the program
-                 MOV AH, 04Ch
-                 INT 21h
+                MOV AH, 04Ch
+                INT 21h
     MAIN ENDP
 
 
@@ -409,8 +412,8 @@ title Calculator Project - GROUP 1
 
             ; Assing Flag
             MOV BX, OFFSET value_flag
-            MOV AX, 01h
-            MOV [BX], AX                   ; 01h indicates that it's a negative value
+            MOV AX, 01h                     ; 01h indicates that it's a negative value
+            MOV [BX], AX                   
         SubtractionEnd:
             RET
     SUB_VALUE ENDP
@@ -507,7 +510,7 @@ title Calculator Project - GROUP 1
 
     PRINT_OPERATOR_ERROR PROC  ; Ryoji
         MOV DH, 03h
-        MOV DL, 021h
+        MOV DL, 020h
         CALL MOVE_CURSOR
 
         MOV AH, 09h;
@@ -521,7 +524,7 @@ title Calculator Project - GROUP 1
 
     PRINT_FIRST_NUMBER_ERROR PROC  ; Ryoji
         MOV DH, 01h
-        MOV DL, 021h
+        MOV DL, 020h
         CALL MOVE_CURSOR
 
         MOV AH, 09h
@@ -535,7 +538,7 @@ title Calculator Project - GROUP 1
 
     PRINT_SECOND_NUMBER_ERROR PROC  ; Ryoji
         MOV DH, 02h
-        MOV DL, 021h
+        MOV DL, 020h
         CALL MOVE_CURSOR
 
         MOV AH, 09h
@@ -549,7 +552,7 @@ title Calculator Project - GROUP 1
 
     PRINT_TRY_AGAIN_ERROR PROC  ; Ryoji
         MOV DH, 08h
-        MOV DL, 021h
+        MOV DL, 020h
         CALL MOVE_CURSOR
 
         MOV AH, 09h
@@ -561,7 +564,7 @@ title Calculator Project - GROUP 1
         RET
     PRINT_TRY_AGAIN_ERROR ENDP
 
-    CLEAR_OPERATOR PROC  ; Ryoji
+    CLEAR_OPERATOR PROC  ; Hans
         ; get error value
         MOV BX, OFFSET err_flag
         MOV AX, [BX]
@@ -590,7 +593,7 @@ title Calculator Project - GROUP 1
             RET
     CLEAR_OPERATOR ENDP
 
-    PRINT_OPERATOR_CLEAR PROC  ; Ryoji
+    PRINT_OPERATOR_CLEAR PROC  ; Hans
         MOV DH, 03h
         MOV DL, 021h
         CALL MOVE_CURSOR
@@ -601,7 +604,7 @@ title Calculator Project - GROUP 1
         RET
     PRINT_OPERATOR_CLEAR ENDP
 
-    PRINT_FIRST_NUMBER_CLEAR PROC  ; Ryoji
+    PRINT_FIRST_NUMBER_CLEAR PROC  ; Hans
         MOV DH, 01h
         MOV DL, 021h
         CALL MOVE_CURSOR
@@ -612,7 +615,7 @@ title Calculator Project - GROUP 1
         RET
     PRINT_FIRST_NUMBER_CLEAR ENDP
 
-    PRINT_SECOND_NUMBER_CLEAR PROC  ; Ryoji
+    PRINT_SECOND_NUMBER_CLEAR PROC  ; Hans
         MOV DH, 02h
         MOV DL, 021h
         CALL MOVE_CURSOR
@@ -623,7 +626,7 @@ title Calculator Project - GROUP 1
         RET
     PRINT_SECOND_NUMBER_CLEAR ENDP
 
-    PRINT_TRY_AGAIN_CLEAR PROC  ; Ryoji
+    PRINT_TRY_AGAIN_CLEAR PROC  ; Hans
         MOV DH, 08h
         MOV DL, 021h
         CALL MOVE_CURSOR
@@ -651,7 +654,6 @@ title Calculator Project - GROUP 1
         CMP DL, 01h                         ; Check if the value is negative
         JE DisplayNegative
         CMP DL, 02h                        ; Check if the value is infinite
-        CALL GET_ANSWER
         JE DisplayInfinite
         JMP ContinueOperatorDisplay
         DisplayInfinite:
@@ -665,12 +667,11 @@ title Calculator Project - GROUP 1
             INT 21h
             JMP EndDigit
         DisplayNegative:
-            PUSH DX                         ; Save Value
             MOV AH, 02h
             MOV DX, '-'
             INT 21h
-            POP DX
         ContinueOperatorDisplay:
+            CALL GET_ANSWER
             ; Compare if The value is LESS THAN OR EQUAL to 09h
             CMP DL, 09h
             JBE OneDigit
@@ -859,7 +860,7 @@ title Calculator Project - GROUP 1
 
     RESET_VALUE ENDP
 
-    RESET_REGISTER PROC
+    RESET_REGISTER PROC ; Aguirre
         MOV AX, 00h
         MOV BX, 00h
         MOV CX, 00h
