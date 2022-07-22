@@ -113,6 +113,7 @@ title Calculator Project - GROUP 1
 
     DISPLAY_FIRST_PROMPT PROC   ; Paul
         CALL DISPLAY_TOP
+
         ; B3 - |
         MOV AH, 02h
         MOV DL, 0B3h
@@ -120,6 +121,7 @@ title Calculator Project - GROUP 1
 
         MOV AH, 09h
         MOV DX, OFFSET first_prompt
+
         int 21h
 
         ; B3 - |
@@ -194,7 +196,6 @@ title Calculator Project - GROUP 1
         MOV BL, 00001011b ;Color Blue
         MOV CX, 18
         INT 10h
-      
         MOV AH, 09h
         MOV DX, OFFSET sup_operator
         int 21h
@@ -252,7 +253,6 @@ title Calculator Project - GROUP 1
         MOV BL, 00001011b ;Color Blue
         MOV CX, 29
         INT 10h
-      
         MOV AH, 09
         MOV DX, OFFSET sup_try_again
         int 21h
@@ -536,7 +536,6 @@ title Calculator Project - GROUP 1
         MOV BL, 10001100b ;Color Red (Blinking)
         MOV CX, 19
         INT 10h
-
         MOV AH, 09h;
         MOV DX, OFFSET err_input
         INT 21h
@@ -545,7 +544,7 @@ title Calculator Project - GROUP 1
         MOV BL, 00001011b ;Color Blue
         MOV CX, 18
         INT 10h
-
+        
         MOV DX, OFFSET sup_operator
         INT 21h
         RET
@@ -556,7 +555,6 @@ title Calculator Project - GROUP 1
         MOV DL, 020h
         CALL MOVE_CURSOR
 
-
         MOV AH, 09h
         MOV BL, 10001100b ;Color Red (Blinking)
         MOV CX, 19
@@ -565,7 +563,6 @@ title Calculator Project - GROUP 1
         MOV AH, 09h
         MOV DX, OFFSET err_input
         INT 21h
-
 
         MOV AH, 09h
         MOV BL, 00001011b ;Color Blue
@@ -582,7 +579,6 @@ title Calculator Project - GROUP 1
         MOV DL, 020h
         CALL MOVE_CURSOR
 
-
         MOV AH, 09h
         MOV BL, 10001100b ;Color Red (Blinking)
         MOV CX, 19
@@ -591,7 +587,6 @@ title Calculator Project - GROUP 1
         MOV AH, 09h
         MOV DX, OFFSET err_input
         INT 21h
-
 
         MOV AH, 09h
         MOV BL, 00001011b ;Color Blue
