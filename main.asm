@@ -33,6 +33,13 @@ title Calculator Project - GROUP 1
     remainder_value db 00h
     value_flag      db 00h      ; tell if it's a negative (0001) or infinite (0010)
 
+    ; Program Start Variables
+    start1		  db "IT150-8L / OL165$"
+    start2		  db "BASIC ARITHMETIC OPERATIONS CALCULATOR$"
+    start3		  db "By Group 1$"
+    start4		  db "[ Press any key to start ]$"
+    start5		  db "--------------------------------------$"
+
 .code
     ; [ Main Function ]
 
@@ -40,6 +47,103 @@ title Calculator Project - GROUP 1
         ; Initialize the data
         MOV AX, @data
         MOV DS, AX
+
+	   CALL CLEAR_SCREEN
+
+	  ;set cursor position
+	  MOV AH, 2
+        MOV BH, 0
+        MOV DH, 6
+        MOV DL, 21
+        INT 10H
+
+	  ;set color
+	  MOV AH, 09h
+        MOV BL, 00000010b
+        MOV CX, 38
+        INT 10h
+
+	  MOV AH, 9
+	  MOV DX, OFFSET start5
+	  INT 21H
+
+	  ;set cursor position
+	  MOV AH, 2
+        MOV BH, 0
+        MOV DH, 8
+        MOV DL, 32
+        INT 10H
+
+	  MOV AH, 9
+	  MOV DX, OFFSET start1
+	  INT 21H
+
+	  ;set cursor position
+	  MOV AH, 2
+        MOV BH, 0
+        MOV DH, 9
+        MOV DL, 21
+        INT 10H
+
+	  MOV AH, 9
+	  MOV DX, OFFSET start2
+	  INT 21H
+
+	  ;set cursor position
+	  MOV AH, 2
+        MOV BH, 0
+        MOV DH, 10
+        MOV DL, 35
+        INT 10H
+
+	  MOV AH, 9
+	  MOV DX, OFFSET start3
+	  INT 21H
+
+	  ;set cursor position
+	  MOV AH, 2
+        MOV BH, 0
+        MOV DH, 12
+        MOV DL, 26
+        INT 10H
+
+	  ;set color
+	  MOV AH, 09h
+        MOV BL, 10000110b
+        MOV CX, 26
+        INT 10h
+
+	  MOV AH, 9
+	  MOV DX, OFFSET start4
+	  INT 21H
+
+	  ;set cursor position
+	  MOV AH, 2
+        MOV BH, 0
+        MOV DH, 14
+        MOV DL, 21
+        INT 10H
+
+	  ;set color
+	  MOV AH, 09h
+        MOV BL, 00000010b
+        MOV CX, 38
+        INT 10H
+
+	  MOV AH, 9
+	  MOV DX, offset start5
+	  INT 21H
+
+	  ;set cursor position
+	  MOV AH, 2
+        MOV BH, 0
+        MOV DH, 16
+        MOV DL, 40
+        INT 10H
+
+	  MOV AH, 1
+	  INT 21H
+
         MainContinue:
         
             ; Initialize Screen
