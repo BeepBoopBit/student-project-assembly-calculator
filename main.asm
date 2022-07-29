@@ -149,9 +149,6 @@ title Calculator Project - GROUP 1
             ; Initialize Screen
             CALL RESET_VALUE
             CALL CLEAR_SCREEN
-            MOV DH, 00h
-            MOV DL, 00h
-            CALL MOVE_CURSOR
             
             ; Calling the main procedures
             CALL DISPLAY_FIRST_PROMPT
@@ -194,8 +191,8 @@ title Calculator Project - GROUP 1
 
                 ; Try Again
                 CALL DISPLAY_TRY_AGAIN_BOX
-                MOV DH, 09h
-                MOV DL, 1Bh
+                MOV DH, 16
+                MOV DL, 36
                 CALL MOVE_CURSOR
                 CALL ASK_INPUT
 
@@ -216,7 +213,15 @@ title Calculator Project - GROUP 1
 
 
     DISPLAY_FIRST_PROMPT PROC   ; Paul
+        MOV DH, 6
+        MOV DL, 08h
+        CALL MOVE_CURSOR
+
         CALL DISPLAY_TOP
+
+        MOV DH, 7
+        MOV DL, 08h
+	  CALL MOVE_CURSOR
 
         ; B3 - |
         MOV AH, 02h
@@ -242,13 +247,17 @@ title Calculator Project - GROUP 1
         int 21h
 
         CALL DISPLAY_NEWLINE
+
+        MOV DH, 8
+        MOV DL, 08h
+	  CALL MOVE_CURSOR
         CALL DISPLAY_BOT
         RET
     DISPLAY_FIRST_PROMPT ENDP
 
     DISPLAY_SECOND_PROMPT PROC  ; Paul
-        MOV DH, 02h
-        MOV DL, 00h
+        MOV DH, 8
+        MOV DL, 08h
         CALL MOVE_CURSOR
         ; B3 - |
         MOV AH, 02h
@@ -274,14 +283,18 @@ title Calculator Project - GROUP 1
         int 21h
 
         CALL DISPLAY_NEWLINE
+	  MOV DH, 9
+        MOV DL, 08h
+        CALL MOVE_CURSOR
         CALL DISPLAY_BOT
         RET
     DISPLAY_SECOND_PROMPT ENDP
 
     DISPLAY_OPERATOR_PROMPT PROC ; Paul
-        MOV DH, 03h
-        MOV DL, 00h
+        MOV DH, 9
+        MOV DL, 08h
         CALL MOVE_CURSOR
+
         ; B3 - |
         MOV AH, 02h
         MOV DL, 0B3h
@@ -300,21 +313,29 @@ title Calculator Project - GROUP 1
         MOV BL, 00001011b ;Color Blue
         MOV CX, 18
         INT 10h
+
         MOV AH, 09h
         MOV DX, OFFSET sup_operator
         int 21h
 
         CALL DISPLAY_NEWLINE
+
+	  MOV DH, 10
+        MOV DL, 08h
+        CALL MOVE_CURSOR
         CALL DISPLAY_BOT
         RET
     DISPLAY_OPERATOR_PROMPT ENDP
     
     DISPLAY_ANSWER_BOX PROC ; Paul
-        MOV DH, 04h
-        MOV DL, 00h
+        MOV DH, 11
+        MOV DL, 08h
         CALL MOVE_CURSOR
-        CALL DISPLAY_BOT
         CALL DISPLAY_TOP
+
+        MOV DH, 12
+        MOV DL, 08h
+        CALL MOVE_CURSOR
         ; B3 - |
         MOV AH, 02h
         MOV DL, 0B3h
@@ -330,16 +351,25 @@ title Calculator Project - GROUP 1
         INT 21h
 
         CALL DISPLAY_NEWLINE
+
+        MOV DH, 13
+        MOV DL, 08h
+        CALL MOVE_CURSOR
         CALL DISPLAY_BOT
         RET
     DISPLAY_ANSWER_BOX ENDP
     
     DISPLAY_TRY_AGAIN_BOX PROC ; Paul
-        MOV DH, 08h
-        MOV DL, 00h
+        MOV DH, 15
+        MOV DL, 08h
         CALL MOVE_CURSOR
         CALL DISPLAY_TOP
-        ; B3 - |
+        
+        MOV DH, 16
+        MOV DL, 08h
+        CALL MOVE_CURSOR
+	  
+	  ; B3 - |
         MOV AH, 02h
         MOV DL, 0B3h
         INT 21h
@@ -362,15 +392,19 @@ title Calculator Project - GROUP 1
         int 21h
 
         CALL DISPLAY_NEWLINE
-        CALL DISPLAY_BOT
+        
+        MOV DH, 17
+        MOV DL, 08h
+        CALL MOVE_CURSOR
+	  CALL DISPLAY_BOT
         RET
     DISPLAY_TRY_AGAIN_BOX ENDP
     
     ; [ Prompts ]
     ASK_FIRST PROC ; Ambraie
         AskFirstAgain:
-            MOV DH, 01h
-            MOV DL, 01Bh
+            MOV DH, 7
+            MOV DL, 36
             CALL RESET_CURSOR_VALUE
 
             ; Get and store the value
@@ -406,8 +440,8 @@ title Calculator Project - GROUP 1
     
     ASK_SECOND PROC ; Ambraie
         AskSecondAgain:
-            MOV DH, 02h
-            MOV DL, 01Bh
+            MOV DH, 8
+            MOV DL, 36
             CALL RESET_CURSOR_VALUE
 
             CALL ASK_INPUT
@@ -442,8 +476,8 @@ title Calculator Project - GROUP 1
     
     ASK_OPERATOR PROC ; Ambraie
         AskOperatorAgain:
-            MOV DH, 03h
-            MOV DL, 01Bh
+            MOV DH, 9
+            MOV DL, 36
             CALL RESET_CURSOR_VALUE
 
             CALL ASK_INPUT
@@ -632,8 +666,8 @@ title Calculator Project - GROUP 1
     PRINT_ERROR ENDP
 
     PRINT_OPERATOR_ERROR PROC  ; Ryoji
-        MOV DH, 03h
-        MOV DL, 020h
+        MOV DH, 9
+        MOV DL, 40
         CALL MOVE_CURSOR
 
         MOV AH, 09h
@@ -655,8 +689,8 @@ title Calculator Project - GROUP 1
     PRINT_OPERATOR_ERROR ENDP
 
     PRINT_FIRST_NUMBER_ERROR PROC  ; Ryoji
-        MOV DH, 01h
-        MOV DL, 020h
+        MOV DH, 7
+        MOV DL, 40
         CALL MOVE_CURSOR
 
         MOV AH, 09h
@@ -679,8 +713,8 @@ title Calculator Project - GROUP 1
     PRINT_FIRST_NUMBER_ERROR ENDP
 
     PRINT_SECOND_NUMBER_ERROR PROC  ; Ryoji
-        MOV DH, 02h
-        MOV DL, 020h
+        MOV DH, 8
+        MOV DL, 40
         CALL MOVE_CURSOR
 
         MOV AH, 09h
@@ -703,8 +737,8 @@ title Calculator Project - GROUP 1
     PRINT_SECOND_NUMBER_ERROR ENDP
 
     PRINT_TRY_AGAIN_ERROR PROC  ; Ryoji
-        MOV DH, 08h
-        MOV DL, 020h
+        MOV DH, 14
+        MOV DL, 40
         CALL MOVE_CURSOR
 
         MOV AH, 09h
@@ -746,8 +780,8 @@ title Calculator Project - GROUP 1
     CLEAR_OPERATOR ENDP
 
     PRINT_OPERATOR_CLEAR PROC  ; Hans
-        MOV DH, 03h
-        MOV DL, 021h
+        MOV DH, 9
+        MOV DL, 40
         CALL MOVE_CURSOR
 
         MOV AH, 09h
@@ -757,8 +791,8 @@ title Calculator Project - GROUP 1
     PRINT_OPERATOR_CLEAR ENDP
 
     PRINT_FIRST_NUMBER_CLEAR PROC  ; Hans
-        MOV DH, 01h
-        MOV DL, 021h
+        MOV DH, 7
+        MOV DL, 40
         CALL MOVE_CURSOR
 
         MOV AH, 09h
@@ -768,8 +802,8 @@ title Calculator Project - GROUP 1
     PRINT_FIRST_NUMBER_CLEAR ENDP
 
     PRINT_SECOND_NUMBER_CLEAR PROC  ; Hans
-        MOV DH, 02h
-        MOV DL, 021h
+        MOV DH, 8
+        MOV DL, 40
         CALL MOVE_CURSOR
 
         MOV AH, 09h
@@ -779,8 +813,8 @@ title Calculator Project - GROUP 1
     PRINT_SECOND_NUMBER_CLEAR ENDP
 
     PRINT_TRY_AGAIN_CLEAR PROC  ; Hans
-        MOV DH, 08h
-        MOV DL, 021h
+        MOV DH, 14
+        MOV DL, 40
         CALL MOVE_CURSOR
 
         MOV AH, 09h
@@ -794,8 +828,8 @@ title Calculator Project - GROUP 1
 
     DISPLAY_ANSWER PROC ; Aguirre
 
-        MOV DH, 06h
-        MOV DL, 01Bh
+        MOV DH, 12
+        MOV DL, 35
         CALL MOVE_CURSOR
 
         ; Get the flag
