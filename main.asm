@@ -642,7 +642,7 @@ title Calculator Project - GROUP 1
         MOV DX, 00h                     ; Reset
 
         CMP CX, 30h
-        JE InfiniteValue
+        JBE InfiniteValue
         JMP NonInfinite
         InfiniteValue:
             MOV BX, OFFSET value_flag
