@@ -42,14 +42,78 @@ title Calculator Project - GROUP 1
     answer_value_array  db 20h, 0h, 20h dup('$')
     value_flag          db 00h      ; tell if it's a negative (0001) or infinite (0010)
 
-    ; Program Start Variables
-    start1		  db "IT150-8L / OL165$"
+       ; Program Start Variables
+    start1		  db " IT150-8L / OL165$"
     start2		  db "BASIC ARITHMETIC OPERATIONS CALCULATOR$"
     start3		  db "By Group 1$"
-    start4		  db "[ Press any key to start ]$"
-    start5		  db "--------------------------------------$"
+    start4		  db "[ Press [1] go to Instructions ]$"
+    start5		  db "[ Press [2] go to Caclculator ]$"
+    start6		  db "[ Press [3] go to Exit ]$"
+    start7		  db "--------------------------------------$"
     buffer        db 20h,0h, 20h dup('$')
+   
+    
+    ;Program Instructions Press Variables
+    press1		  db "< Press [1] to Back$"
+    press2		  db "Press [2] to Next >$"
 
+    ;Program Instructions 1 Variables
+    inst1a		  db "Range of Supported Numbers and  What to Input$"
+    inst1b		  db "INSTRUCTIONS (1/4)$"
+    inst1c		  db "Program will only accept numbers from$"
+    inst1d        db " [0 - 65535].$"
+    inst1e        db "Program will only support$"
+    inst1f        db " [5$"
+    inst1g        db " digit input.$"
+    inst1h        db "Program will be expecting the following$"
+    inst1i        db "operators:$"
+    inst1j        db " [+ - * /]$"
+
+    ;Program Instructions 2 Variables
+    inst2a		  db "         How to Use the Program$"
+    inst2b		  db "INSTRUCTIONS (2/4)$"
+    inst2c		  db "1. Enter the First Number$"
+    inst2d        db "  [0 - 65535]$"
+    inst2e        db "2. Enter the Second Number$"
+    inst2f        db " [0 - 65535]$"
+    inst2g        db "3. Enter the Appopriate Operator$"
+    inst2h        db "+$"
+    inst2i        db " = Addition, $"
+    inst2j        db "-$"
+    inst2k        db " = Subtraction,$"
+    inst2l        db "*$"
+    inst2m        db " = Multiplication, $"
+    inst2n        db " /$"
+    inst2o        db " = Divsion$"
+    inst2p        db "4. See the Results$"
+    inst2q        db "5. Enter $"
+    inst2r        db "[Y or y]$"
+    inst2s        db " if try again, else$"
+    inst2t        db "enter any value to exit$"
+
+    ;Program Instructions 3 Variables
+    inst3a        db "How to Read Errors$"
+    inst3b        db "INSTRUCTIONS (3/4)$"
+    inst3c        db "1. Input error, if the First Number is not a$"
+    inst3d        db " positive$"                                           ;color
+    inst3e        db "integer$"                                             ;color
+    inst3f        db "2. Input error, if the Second Number is not a$"
+    inst3g        db " positive$"                                           ;color
+    inst3h        db "integer$"                                             ;color
+    inst3i        db "3. Input error, if the Operator is $"
+    inst3j        db "different$"                                           ;color                                       
+    inst3k        db " on the$"
+    inst3l        db "instructions$"
+
+
+    ;Program Instructions 4 Variables
+    inst4a        db "Example$"
+    inst4b        db "INSTRUCTIONS (4/4)$"
+    inst4c        db "2333$"
+    inst4d        db "126 $"
+    inst4e        db "+   $"
+    inst4f        db "2459$"
+    inst4g        db "Y   $"
 
 .code
     ; [ Main Function ]
@@ -64,98 +128,122 @@ title Calculator Project - GROUP 1
 	    CALL CLEAR_SCREEN
 
         ;set cursor position
-	    MOV AH, 2
-        MOV BH, 0
         MOV DH, 6
-        MOV DL, 21
-        INT 10H
+        MOV DL, 15H
+        CALL MOVE_CURSOR
 
         ;set color
         MOV AH, 09h
-        MOV BL, 00000010b
+        MOV BL, 10000010b
         MOV CX, 38
         INT 10h
 
         MOV AH, 9
-        MOV DX, OFFSET start5
+        MOV DX, OFFSET start7 ;Prompts for the "------------------------"
         INT 21H
 
-        ;set cursor position
-        MOV AH, 2
-        MOV BH, 0
+      ;set cursor position
         MOV DH, 8
-        MOV DL, 32
-        INT 10H
+        MOV DL, 20H
+        CALL MOVE_CURSOR
 
         MOV AH, 9
-        MOV DX, OFFSET start1
+        MOV DX, OFFSET start1 ;Prompts for the "IT150-8L / OL165"
         INT 21H
 
         ;set cursor position
-        MOV AH, 2
-        MOV BH, 0
         MOV DH, 9
-        MOV DL, 21
-        INT 10H
+        MOV DL, 15H
+        CALL MOVE_CURSOR
 
         MOV AH, 9
-        MOV DX, OFFSET start2
+        MOV DX, OFFSET start2 ;Prompts for the "BASIC ARITHMETIC OPERATIONS CALCULATOR"
         INT 21H
 
         ;set cursor position
-        MOV AH, 2
-        MOV BH, 0
-        MOV DH, 10
-        MOV DL, 35
-        INT 10H
+        MOV DH, 0AH
+        MOV DL, 23H
+        CALL MOVE_CURSOR
 
         MOV AH, 9
-        MOV DX, OFFSET start3
+        MOV DX, OFFSET start3 ;Prompts for the "By Group 1"
         INT 21H
 
         ;set cursor position
-        MOV AH, 2
-        MOV BH, 0
-        MOV DH, 12
-        MOV DL, 26
-        INT 10H
+        MOV DH, 0DH
+        MOV DL, 1AH
+        CALL MOVE_CURSOR
 
         ;set color
         MOV AH, 09h
-        MOV BL, 10000110b
-        MOV CX, 26
+        MOV BL, 00000110b
+        MOV CX, 34
         INT 10h
 
         MOV AH, 9
-        MOV DX, OFFSET start4
+        MOV DX, OFFSET start4 ;Prompts for the "[ Press [1] go to Instructions ]"
         INT 21H
 
         ;set cursor position
-        MOV AH, 2
-        MOV BH, 0
-        MOV DH, 14
-        MOV DL, 21
-        INT 10H
+        MOV DH, 0EH
+        MOV DL, 1AH
+        CALL MOVE_CURSOR
 
         ;set color
         MOV AH, 09h
-        MOV BL, 00000010b
-        MOV CX, 38
+        MOV BL, 00000110b
+        MOV CX, 32
         INT 10H
 
         MOV AH, 9
-        MOV DX, offset start5
+        MOV DX, offset start5 ;Prompts for the "[ Press [2] go to Caclculator ]"
         INT 21H
 
         ;set cursor position
-        MOV AH, 2
-        MOV BH, 0
-        MOV DH, 16
-        MOV DL, 40
+        MOV DH, 0FH
+        MOV DL, 1AH
+        CALL MOVE_CURSOR
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000110b
+        MOV CX, 25
         INT 10H
 
+        MOV AH, 9
+        MOV DX, offset start6 ;Prompts for the "[ Press [3] go to Exit ]"
+        INT 21H
+
+        ;set cursor position
+        MOV DH, 11H
+        MOV DL, 15H
+        CALL MOVE_CURSOR
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 10000010b
+        MOV CX, 38
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET start7 ;Prompts for the "------------------------"
+        INT 21H
+
+        ;set cursor position
+        MOV DH, 10H
+        MOV DL, 28H
+        CALL MOVE_CURSOR
+
+        ;Get Input of the user
         MOV AH, 1
         INT 21H
+
+       ;CMP AL, '1'
+       ;JE DISPLAY_INST1
+       ;CMP AL, '2'
+       ;JE DISPLAY_FIRST_PROMPT
+       ;CMP AL, '3'
+       ;JE EXIT PROC
 
         MainContinue:
         
@@ -231,6 +319,939 @@ title Calculator Project - GROUP 1
     MAIN ENDP
 
     ; [Display]
+    DISPLAY_INST1 PROC
+        ; top green background
+	    mov bh,00100000b 
+	    mov ch,0 
+	    mov cl,0
+	    mov dh,1
+	    mov dl,79
+	    int 10h
+
+	    ; bottom green background
+	    mov bh,00100000b 
+	    mov ch,23
+	    mov cl,0
+	    mov dh,24
+	    mov dl,79
+	    int 10h
+
+	    ; Press [1] to Back
+        ; set cursor position
+        MOV DH, 03h
+        MOV DL, 0h
+        CALL MOVE_CURSOR
+
+        ; set color
+        MOV AH, 09h
+        MOV BL, 00000111b
+        MOV CX, 38
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET press1
+        INT 21H
+
+	    ; Press [2] to Next
+        ;set cursor position
+        MOV DH, 03h
+        MOV DL, 3Dh
+        CALL MOVE_CURSOR
+
+        ; set color
+        MOV AH, 09h
+        MOV BL, 00000111b
+        MOV CX, 38
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET press2
+        INT 21H
+
+	    ; Prompts
+        ; set cursor position
+        MOV DH, 09h
+        MOV DL, 12h
+        CALL MOVE_CURSOR
+
+        MOV AH, 9
+        MOV DX, OFFSET inst1a
+        INT 21H
+
+        ; set cursor position
+        MOV DH, 0Ah
+        MOV DL, 20h
+        CALL MOVE_CURSOR
+
+        MOV AH, 9
+        MOV DX, OFFSET inst1b
+        INT 21H
+
+        ; set cursor position
+        MOV DH, 0Ch
+        MOV DL, 10h
+        CALL MOVE_CURSOR
+
+        MOV AH, 9
+        MOV DX, OFFSET inst1c
+        INT 21H
+
+	    ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 12
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET inst1d
+        INT 21H
+
+        ; set cursor position
+        MOV DH, 0Dh
+        MOV DL, 14h
+        CALL MOVE_CURSOR
+
+        MOV AH, 9
+        MOV DX, OFFSET inst1e
+        INT 21H
+
+	    ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 4
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET inst1f
+        INT 21H
+
+        MOV AH, 9
+        MOV DX, OFFSET inst1g
+        INT 21H
+
+        ; set cursor position
+        MOV DH, 0Eh
+        MOV DL, 15h
+        CALL MOVE_CURSOR
+
+        MOV AH, 9
+        MOV DX, OFFSET inst1h
+        INT 21H
+
+        ; set cursor position
+        MOV DH, 0Fh
+        MOV DL, 1Eh
+        CALL MOVE_CURSOR
+
+        MOV AH, 9
+        MOV DX, OFFSET inst1i
+        INT 21H
+
+	    ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 10
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET inst1j
+        INT 21H
+
+        ; set cursor position
+        MOV DH, 17h
+        MOV DL, 28h
+        CALL MOVE_CURSOR
+        RET
+    DISPLAY_INST1 ENDP
+
+    DISPLAY_INST2 PROC
+
+    	; top green background
+	    MOV BH,00100000b 
+	    MOV CH,0 
+	    MOV CL,0
+	    MOV DH,1
+	    MOV DL,4FH
+	    INT 10H
+
+	    ; bottom green background
+	    MOV BH,00100000b 
+	    MOV CH,23
+	    MOV CL,0
+	    MOV DH,18H
+	    MOV DL,4FH
+	    INT 10H
+
+	    ; Press [1] to Back
+        ; set cursor position
+        MOV DH, 3
+        MOV DL, 0
+        CALL MOVE_CURSOR
+        INT 10H
+
+        ; set color
+        MOV AH, 09h
+        MOV BL, 00000111b
+        MOV CX, 38
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET press1 ;Prompts the "< Press [1] to Back"
+        INT 21H
+
+	    ; Press [2] to Next
+        ;set cursor position
+        MOV DH, 3
+        MOV DL, 3DH
+        CALL MOVE_CURSOR
+        INT 10H
+
+        ; set color
+        MOV AH, 09h
+        MOV BL, 00000111b
+        MOV CX, 38
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET press2 ;Prompts the "Press [2] to Next >"
+        INT 21H
+
+        ; Prompts
+        ; set cursor position
+        MOV DH, 7
+        MOV DL, 14H
+        CALL MOVE_CURSOR
+        INT 10H
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2a ;Prompts "How to Use the Program"
+        INT 21H
+
+        ; set cursor position
+        MOV DH, 8
+        MOV DL, 20H
+        CALL MOVE_CURSOR
+        INT 10H
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2b ;Prompts "Instructions"
+        INT 21H
+
+        ; set cursor position
+        MOV DH, 0BH
+        MOV DL, 14H
+        CALL MOVE_CURSOR
+        INT 10H
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2c ;Prompts "Enter the First Number"
+        INT 21H
+
+	    ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 13
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2d ;Prompts "65535"
+        INT 21H
+
+       ; set cursor position
+        MOV DH, 0CH
+        MOV DL, 14H
+        CALL MOVE_CURSOR
+        INT 10H
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2e ;Prompts "Enter the Second Number""
+        INT 21H
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 12
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2f ;Prompts "65535"
+        INT 21H
+
+        ; set cursor position
+        MOV DH, 0DH
+        MOV DL, 14H
+        CALL MOVE_CURSOR
+        INT 10H
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2g ;Prompts "Enter the Operator"
+        INT 21H
+
+        ; set cursor position
+        MOV DH, 0EH
+        MOV DL, 18H
+        CALL MOVE_CURSOR
+        INT 10H
+
+        ; set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 1
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2h ;Prompts the '+' Sign
+        INT 21H
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2i ;Prompts the " = Addition"
+        INT 21H
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 1
+        INT 10h
+
+        ; set cursor position
+        MOV DH, 0EH
+        MOV DL, 2DH
+        CALL MOVE_CURSOR
+        INT 10H
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 1
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2j ;Prompts the '-' Sign
+        INT 21H
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2k ;Prompts the "= Subtraction"
+        INT 21H
+
+        ; set cursor position
+        MOV DH, 0FH
+        MOV DL, 18H
+        CALL MOVE_CURSOR
+        INT 10H
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 2
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2l ;Prompts the '*' Sign
+        INT 21H
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2m ;Prompts the " = Multiplication"
+        INT 21H
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 3
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2n ;Prompts the '/' Sign
+        INT 21H
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2o ;Prompts the " = Division"
+        INT 21H
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 10
+        INT 10h
+
+        ; set cursor position
+        MOV DH, 10H
+        MOV DL, 14H
+        CALL MOVE_CURSOR
+        INT 10H
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2p ;Prompts the "4. See the Results"
+        INT 21H
+
+        ; set cursor position
+        MOV DH, 11H
+        MOV DL, 14H
+        CALL MOVE_CURSOR
+        INT 10H
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2q ;Prompts the "5. Enter"
+        INT 21H
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 9
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2r ;Prompts the "[Y/y]
+        INT 21H
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2s ;Prompts the "if try again, else"
+        INT 21H
+
+        ; set cursor position
+        MOV DH, 12H
+        MOV DL, 14H
+        CALL MOVE_CURSOR
+        INT 10H
+
+        MOV AH, 9
+        MOV DX, OFFSET inst2t ;Prompts the "enter any value to exit"
+        INT 21H
+
+        RET
+    DISPLAY_INST2 ENDP
+
+    DISPLAY_INST3 PROC
+
+    	; top green background
+	    MOV BH,00100000b 
+	    MOV CH,0 
+	    MOV CL,0
+	    MOV DH,1
+	    MOV DL,4FH
+	    INT 10H
+
+	    ; bottom green background
+	    MOV BH,00100000b 
+	    MOV CH,23
+	    MOV CL,0
+	    MOV DH,18H
+	    MOV DL,4FH
+	    INT 10H
+
+	    ; Press [1] to Back
+        ; set cursor position
+        MOV DH, 3
+        MOV DL, 0
+        CALL MOVE_CURSOR
+        INT 10H
+
+        ; set color
+        MOV AH, 09h
+        MOV BL, 00000111b
+        MOV CX, 38
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET press1 ;Prompts the "< Press [1] to Back"
+        INT 21H
+
+	    ; Press [2] to Next
+        ;set cursor position
+        MOV DH, 3
+        MOV DL, 3DH
+        CALL MOVE_CURSOR
+        INT 10H
+
+        ; set color
+        MOV AH, 09h
+        MOV BL, 00000111b
+        MOV CX, 38
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET press2 ;Prompts the "Press [2] to Next >"
+        INT 21H
+
+        ; Prompts
+        ; set cursor position
+	    MOV AH, 2
+        MOV BH, 0
+        MOV DH, 09h
+        MOV DL, 20h
+        INT 10H
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst3a
+        INT 21H
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 0Ah
+        MOV DL, 20h
+        INT 10H
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst3b
+        INT 21H
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 0Ch
+        MOV DL, 10h
+        INT 10H
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst3c
+        INT 21H
+
+	    ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 60
+        INT 10h
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst3d               
+        INT 21H
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 0Dh
+        MOV DL, 13h
+        INT 10H
+
+        MOV AH, 9
+        MOV DX, OFFSET inst3e           
+        INT 21H
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 0Eh
+        MOV DL, 10h
+        INT 10H
+
+        ; set color
+        MOV AH, 09h
+        MOV BL, 00000111b
+        MOV CX, 38
+        INT 10h
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst3f
+        INT 21H
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 60
+        INT 10h
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst3g       
+        INT 21H
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 0Fh
+        MOV DL, 13h
+        INT 10H        
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst3h       
+        INT 21H
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 10h
+        MOV DL, 10h
+        INT 10H
+
+        ; set color
+        MOV AH, 09h
+        MOV BL, 00000111b
+        MOV CX, 38
+        INT 10h
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst3i      
+        INT 21H
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 12
+        INT 10h
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst3j
+        INT 21H
+
+        ; set color
+        MOV AH, 09h
+        MOV BL, 00000111b
+        MOV CX, 38
+        INT 10h
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst3k
+        INT 21H
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 11h
+        MOV DL, 13h
+        INT 10H        
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 12
+        INT 10h    
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst3l    
+        INT 21H        
+        
+        ; set cursor position
+        MOV DH, 17h
+        MOV DL, 28h
+        CALL MOVE_CURSOR
+        RET
+    DISPLAY_INST3 ENDP
+
+    DISPLAY_INST4 PROC
+
+    	; top green background
+	    MOV BH,00100000b 
+	    MOV CH,0 
+	    MOV CL,0
+	    MOV DH,1
+	    MOV DL,4FH
+	    INT 10H
+
+	    ; bottom green background
+	    MOV BH,00100000b 
+	    MOV CH,23
+	    MOV CL,0
+	    MOV DH,18H
+	    MOV DL,4FH
+	    INT 10H
+
+	    ; Press [1] to Back
+        ; set cursor position
+        MOV DH, 3
+        MOV DL, 0
+        CALL MOVE_CURSOR
+        INT 10H
+
+        ; set color
+        MOV AH, 09h
+        MOV BL, 00000111b
+        MOV CX, 38
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET press1 ;Prompts the "< Press [1] to Back"
+        INT 21H
+
+	    ; Press [2] to Next
+        ;set cursor position
+        MOV DH, 3
+        MOV DL, 3DH
+        CALL MOVE_CURSOR
+        INT 10H
+
+        ; set color
+        MOV AH, 09h
+        MOV BL, 00000111b
+        MOV CX, 38
+        INT 10h
+
+        MOV AH, 9
+        MOV DX, OFFSET press2 ;Prompts the "Press [2] to Next >"
+        INT 21H
+
+        ; Prompts
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 09h
+        MOV DL, 25h
+        INT 10H
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst4a
+        INT 21H
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 0Ah
+        MOV DL, 20h
+        INT 10H
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst4b
+        INT 21H
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 0Ch
+        MOV DL, 19h
+        INT 10H
+
+        CALL DISPLAY_TOP
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 0Dh
+        MOV DL, 19h
+        INT 10H
+
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        MOV AH, 09h
+        MOV DX, OFFSET first_prompt
+        int 21h
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 0Dh
+        MOV DL, 34h
+        INT 10H
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 4
+        INT 10h  
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst4c
+        INT 21H
+
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 0Eh
+        MOV DL, 19h
+        INT 10H
+
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        MOV AH, 09h
+        MOV DX, OFFSET second_prompt
+        int 21h
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 0Eh
+        MOV DL, 34h
+        INT 10H
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 3
+        INT 10h  
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst4d
+        INT 21H
+
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 0Fh
+        MOV DL, 19h
+        INT 10H
+
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        MOV AH, 09h
+        MOV DX, OFFSET operator_prompt
+        int 21h
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 0Fh
+        MOV DL, 34h
+        INT 10H
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 1
+        INT 10h 
+
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst4e
+        INT 21H
+
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 10h
+        MOV DL, 19h
+        INT 10H
+
+        CALL DISPLAY_BOT
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 11h
+        MOV DL, 19h
+        INT 10H
+
+        CALL DISPLAY_TOP
+        
+        ; set cursor position
+	    MOV AH, 02
+        MOV BH, 0
+        MOV DH, 12h
+        MOV DL, 19h
+        INT 10H
+
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        MOV AH, 09h
+        MOV DX, OFFSET ans_prompt
+        int 21h
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 12h
+        MOV DL, 34h
+        INT 10H
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 4
+        INT 10h 
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst4f
+        INT 21H
+
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 13h
+        MOV DL, 19h
+        INT 10H
+
+        CALL DISPLAY_BOT
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 14h
+        MOV DL, 19h
+        INT 10H
+
+        CALL DISPLAY_TOP
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 15h
+        MOV DL, 19h
+        INT 10H
+
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        MOV AH, 09h
+        MOV DX, OFFSET end_prompt
+        int 21h
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 15h
+        MOV DL, 34h
+        INT 10H
+
+        ;set color
+        MOV AH, 09h
+        MOV BL, 00000011b
+        MOV CX, 1
+        INT 10h 
+
+        MOV AH, 09h
+        MOV DX, OFFSET inst4g
+        INT 21H
+
+        ; B3 - |
+        MOV AH, 02h
+        MOV DL, 0B3h
+        INT 21h
+
+        ; set cursor position
+	    MOV AH, 02h
+        MOV BH, 0
+        MOV DH, 16h
+        MOV DL, 19h
+        INT 10H
+
+        CALL DISPLAY_BOT
+
+        ; set cursor position
+        MOV DH, 17h
+        MOV DL, 28h
+        CALL MOVE_CURSOR
+        RET
+    DISPLAY_INST4 ENDP
 
     DISPLAY_FIRST_PROMPT PROC   ; Paul
 
