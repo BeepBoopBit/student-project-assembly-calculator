@@ -55,107 +55,108 @@ title Calculator Project - GROUP 1
 .code
     ; [ Main Function ]
 
-MAIN PROC ; Aguirre
+    MAIN PROC ; Aguirre
         ; Initialize the data
         MOV AX, @data
         MOV DS, AX
         MOV ES, AX
 
-	   CALL CLEAR_SCREEN
+        CALL RESET_VALUE
+	    CALL CLEAR_SCREEN
 
-	  ;set cursor position
-	  MOV AH, 2
+        ;set cursor position
+	    MOV AH, 2
         MOV BH, 0
         MOV DH, 6
         MOV DL, 21
         INT 10H
 
-	  ;set color
-	  MOV AH, 09h
+        ;set color
+        MOV AH, 09h
         MOV BL, 00000010b
         MOV CX, 38
         INT 10h
 
-	  MOV AH, 9
-	  MOV DX, OFFSET start5
-	  INT 21H
+        MOV AH, 9
+        MOV DX, OFFSET start5
+        INT 21H
 
-	  ;set cursor position
-	  MOV AH, 2
+        ;set cursor position
+        MOV AH, 2
         MOV BH, 0
         MOV DH, 8
         MOV DL, 32
         INT 10H
 
-	  MOV AH, 9
-	  MOV DX, OFFSET start1
-	  INT 21H
+        MOV AH, 9
+        MOV DX, OFFSET start1
+        INT 21H
 
-	  ;set cursor position
-	  MOV AH, 2
+        ;set cursor position
+        MOV AH, 2
         MOV BH, 0
         MOV DH, 9
         MOV DL, 21
         INT 10H
 
-	  MOV AH, 9
-	  MOV DX, OFFSET start2
-	  INT 21H
+        MOV AH, 9
+        MOV DX, OFFSET start2
+        INT 21H
 
-	  ;set cursor position
-	  MOV AH, 2
+        ;set cursor position
+        MOV AH, 2
         MOV BH, 0
         MOV DH, 10
         MOV DL, 35
         INT 10H
 
-	  MOV AH, 9
-	  MOV DX, OFFSET start3
-	  INT 21H
+        MOV AH, 9
+        MOV DX, OFFSET start3
+        INT 21H
 
-	  ;set cursor position
-	  MOV AH, 2
+        ;set cursor position
+        MOV AH, 2
         MOV BH, 0
         MOV DH, 12
         MOV DL, 26
         INT 10H
 
-	  ;set color
-	  MOV AH, 09h
+        ;set color
+        MOV AH, 09h
         MOV BL, 10000110b
         MOV CX, 26
         INT 10h
 
-	  MOV AH, 9
-	  MOV DX, OFFSET start4
-	  INT 21H
+        MOV AH, 9
+        MOV DX, OFFSET start4
+        INT 21H
 
-	  ;set cursor position
-	  MOV AH, 2
+        ;set cursor position
+        MOV AH, 2
         MOV BH, 0
         MOV DH, 14
         MOV DL, 21
         INT 10H
 
-	  ;set color
-	  MOV AH, 09h
+        ;set color
+        MOV AH, 09h
         MOV BL, 00000010b
         MOV CX, 38
         INT 10H
 
-	  MOV AH, 9
-	  MOV DX, offset start5
-	  INT 21H
+        MOV AH, 9
+        MOV DX, offset start5
+        INT 21H
 
-	  ;set cursor position
-	  MOV AH, 2
+        ;set cursor position
+        MOV AH, 2
         MOV BH, 0
         MOV DH, 16
         MOV DL, 40
         INT 10H
 
-	  MOV AH, 1
-	  INT 21H
+        MOV AH, 1
+        INT 21H
 
         MainContinue:
         
@@ -421,6 +422,7 @@ MAIN PROC ; Aguirre
     
     ; [ Prompts ]
     ASK_FIRST PROC ; Ambraie
+        CALL RESET_REGISTER
         ; Reset The Flag
         MOV BX, OFFSET err_flag
         MOV AX, 00h
@@ -469,6 +471,7 @@ MAIN PROC ; Aguirre
     ASK_FIRST ENDP
    
     ASK_SECOND PROC ; Ambraie
+        CALL RESET_REGISTER
         AskSecondAgain:
             MOV DH, 8
             MOV DL, 36
@@ -557,6 +560,7 @@ MAIN PROC ; Aguirre
     ; [ Operations ]
     ; - Assumes that first_value and second_value are already configured by CONVERT_TO_HEX
     ADD_VALUE PROC  ; Aguirre
+        CALL RESET_REGISTER
         ; Get the first number
         MOV BX, OFFSET first_value
         MOV AX, [BX]
@@ -573,6 +577,7 @@ MAIN PROC ; Aguirre
     ADD_VALUE ENDP
 
     SUB_VALUE PROC  ; Aguirre
+        CALL RESET_REGISTER
         ; Get the first number
         MOV BX, OFFSET first_value
         MOV AX, [BX]
@@ -587,7 +592,6 @@ MAIN PROC ; Aguirre
         CMP AX, 0
         JL NegativeValue
         PositiveValue:
-            MOV AH, 00h                     ; Signifies that it's a positive value
             MOV BX, OFFSET answer_value
             MOV [BX], AX
             JMP SubtractionEnd
@@ -607,6 +611,7 @@ MAIN PROC ; Aguirre
     SUB_VALUE ENDP
 
     MUL_VALUE PROC ; Aguirre
+        CALL RESET_REGISTER
         ; Get the first number
         MOV BX, OFFSET first_value
         MOV AX, [BX]
@@ -624,6 +629,7 @@ MAIN PROC ; Aguirre
     MUL_VALUE ENDP
 
     DIV_VALUE PROC ; Aguirre
+        CALL RESET_REGISTER
         ; Get the first number
         MOV BX, OFFSET first_value
         MOV AX, [BX]
