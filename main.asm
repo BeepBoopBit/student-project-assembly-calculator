@@ -222,6 +222,7 @@ title Calculator Project - GROUP 1
                 JE MainContinue
                 JMP MainStop
             MainStop:
+                CALL CLEAR_SCREEN
                 MOV DH, 0Bh
                 MOV DL, 00h
                 CALL MOVE_CURSOR
