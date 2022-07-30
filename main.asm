@@ -48,7 +48,6 @@ title Calculator Project - GROUP 1
     start3		  db "By Group 1$"
     start4		  db "[ Press any key to start ]$"
     start5		  db "--------------------------------------$"
-
     buffer        db 20h,0h, 20h dup('$')
 
 
@@ -231,27 +230,31 @@ title Calculator Project - GROUP 1
                 INT 21h
     MAIN ENDP
 
-
+    ; [Display]
 
     DISPLAY_FIRST_PROMPT PROC   ; Paul
+
+        ; Move the cursor
         MOV DH, 6
         MOV DL, 08h
         CALL MOVE_CURSOR
 
+        ; Display the top Line
         CALL DISPLAY_TOP
 
+        ; Move the cursor
         MOV DH, 7
         MOV DL, 08h
-	  CALL MOVE_CURSOR
+	    CALL MOVE_CURSOR
 
         ; B3 - |
         MOV AH, 02h
         MOV DL, 0B3h
         INT 21h
 
+        ; Print Prompt
         MOV AH, 09h
         MOV DX, OFFSET first_prompt
-
         int 21h
 
         ; B3 - |
@@ -259,32 +262,41 @@ title Calculator Project - GROUP 1
         MOV DL, 0B3h
         INT 21h
 
+        ; Set Color to Blue
         MOV AH, 09h
-        MOV BL, 00001011b ;Color Blue
+        MOV BL, 00001011b               ;Blue
         MOV CX, 10
         INT 10h
-      
+
+        ; Print Supporting Instruction
         MOV DX, OFFSET sup_number
         int 21h
 
+        ; New line
         CALL DISPLAY_NEWLINE
 
+        ; Move Cursor
         MOV DH, 8
         MOV DL, 08h
-	  CALL MOVE_CURSOR
+	    CALL MOVE_CURSOR
+        
+        ; Display the Bottom line
         CALL DISPLAY_BOT
         RET
     DISPLAY_FIRST_PROMPT ENDP
 
     DISPLAY_SECOND_PROMPT PROC  ; Paul
+        ; Move cursor
         MOV DH, 8
         MOV DL, 08h
         CALL MOVE_CURSOR
+        
         ; B3 - |
         MOV AH, 02h
         MOV DL, 0B3h
         INT 21h
 
+        ; Print Prompt
         MOV AH, 09h
         MOV DX, OFFSET second_prompt
         int 21h
@@ -294,24 +306,32 @@ title Calculator Project - GROUP 1
         MOV DL, 0B3h
         INT 21h
 
+        ; Set Color to Blue
         MOV AH, 09h
-        MOV BL, 00001011b ;Color Blue
+        MOV BL, 00001011b                      ;Blue
         MOV CX, 10
         INT 10h
       
+        ; Print Supporting Instruction
         MOV AH, 09h
         MOV DX, OFFSET sup_number
         int 21h
 
+        ; Display New Line
         CALL DISPLAY_NEWLINE
-	  MOV DH, 9
+
+        ; Move Cursor
+        MOV DH, 9
         MOV DL, 08h
         CALL MOVE_CURSOR
+
+        ; Display Bottom Line
         CALL DISPLAY_BOT
         RET
     DISPLAY_SECOND_PROMPT ENDP
 
     DISPLAY_OPERATOR_PROMPT PROC ; Paul
+        ; Move Cursor
         MOV DH, 9
         MOV DL, 08h
         CALL MOVE_CURSOR
@@ -321,6 +341,7 @@ title Calculator Project - GROUP 1
         MOV DL, 0B3h
         INT 21h
 
+        ; Display Prompt
         MOV AH, 09h
         MOV DX, OFFSET operator_prompt
         int 21h
@@ -330,38 +351,50 @@ title Calculator Project - GROUP 1
         MOV DL, 0B3h
         INT 21h
 
+        ; Set Color to Blue
         MOV AH, 09h
-        MOV BL, 00001011b ;Color Blue
+        MOV BL, 00001011b                   ;Blue
         MOV CX, 18
         INT 10h
 
+        ; Display Supporting Instruction
         MOV AH, 09h
         MOV DX, OFFSET sup_operator
         int 21h
 
+        ; Display New Line
         CALL DISPLAY_NEWLINE
 
-	  MOV DH, 10
+        ; Move Cursor
+        MOV DH, 10
         MOV DL, 08h
         CALL MOVE_CURSOR
+        
+        ; Display Bottom Line
         CALL DISPLAY_BOT
         RET
     DISPLAY_OPERATOR_PROMPT ENDP
     
     DISPLAY_ANSWER_BOX PROC ; Paul
+        ; Move Cursor
         MOV DH, 11
         MOV DL, 08h
         CALL MOVE_CURSOR
+
+        ; Display Top line
         CALL DISPLAY_TOP
 
+        ; Move Cursor
         MOV DH, 12
         MOV DL, 08h
         CALL MOVE_CURSOR
+
         ; B3 - |
         MOV AH, 02h
         MOV DL, 0B3h
         INT 21h
 
+        ; Display Prompt
         MOV AH, 09h
         MOV DX, OFFSET ans_prompt
         int 21h
@@ -371,30 +404,39 @@ title Calculator Project - GROUP 1
         MOV DL, 0B3h
         INT 21h
 
+        ; Display New line
         CALL DISPLAY_NEWLINE
 
+        ; Move Cursor
         MOV DH, 13
         MOV DL, 08h
         CALL MOVE_CURSOR
+
+        ; Display Bottom line
         CALL DISPLAY_BOT
         RET
     DISPLAY_ANSWER_BOX ENDP
     
     DISPLAY_TRY_AGAIN_BOX PROC ; Paul
+        ; Move Cursor
         MOV DH, 15
         MOV DL, 08h
         CALL MOVE_CURSOR
+
+        ; Display Top Line
         CALL DISPLAY_TOP
         
+        ; Move Cursor
         MOV DH, 16
         MOV DL, 08h
         CALL MOVE_CURSOR
 	  
-	  ; B3 - |
+        ; B3 - |
         MOV AH, 02h
         MOV DL, 0B3h
         INT 21h
 
+        ; Display Prompt
         MOV AH, 09h
         MOV DX, OFFSET end_prompt
         int 21h
@@ -404,32 +446,43 @@ title Calculator Project - GROUP 1
         MOV DL, 0B3h
         INT 21h
 
+        ; Set Color to Blue
         MOV AH, 09h
-        MOV BL, 00001011b ;Color Blue
+        MOV BL, 00001011b               ;Blue
         MOV CX, 29
         INT 10h
+
+        ; Display Supporting Instruction
         MOV AH, 09
         MOV DX, OFFSET sup_try_again
         int 21h
-
+        
+        ; Display New Line
         CALL DISPLAY_NEWLINE
         
+        ; Move Cursor
         MOV DH, 17
         MOV DL, 08h
         CALL MOVE_CURSOR
-	  CALL DISPLAY_BOT
+
+        ; Display Bottome Line
+        CALL DISPLAY_BOT
         RET
     DISPLAY_TRY_AGAIN_BOX ENDP
     
     ; [ Prompts ]
     ASK_FIRST PROC ; Ambraie
+        ; Reset the Register
         CALL RESET_REGISTER
+    
         ; Reset The Flag
         MOV BX, OFFSET err_flag
         MOV AX, 00h
         MOV [BX], AX
 
+        ; Ask for the value 
         AskFirstAgain:
+            ; Move the Cursor to its normal position
             MOV DH, 7
             MOV DL, 36
             CALL RESET_CURSOR_VALUE
@@ -437,43 +490,60 @@ title Calculator Project - GROUP 1
             ; Get and store the value
             MOV DX, OFFSET first_value_array
             CALL ASK_INPUT
+
             ; Check First value
             MOV BX, OFFSET err_check
             MOV AX, 00000001b
             MOV [BX], AL
 
+            ; Configured SI for CHECK_VALUE
             MOV SI, OFFSET first_value_array
             CALL CHECK_VALUE
             
+            ; Get err_flag
             MOV BX, OFFSET err_flag
             MOV AX, [BX]
 
+            ; Check if there is an error
             CMP AL, 0101b
             JE FirstInputError
             JMP FirstInputContinue
-            FirstInputError:
+            FirstInputError:                    ; An Error has occured
+                ; Print the error
                 CALL PRINT_ERROR
+                
+                ; Reset the flag
                 MOV BX, OFFSET err_flag
                 MOV AX, 00000000b
                 MOV [BX], AL
+
+                ; Configured SI for RESET_ARRAY_VALUE
                 MOV SI, OFFSET first_value_array
+
+                ; Reset the array
                 CALL RESET_ARRAY_VALUE
                 JMP AskFirstAgain
-            FirstInputContinue:
-                ; Store Value
+            FirstInputContinue:                 ; No error
+                ; Reset the Registers
                 CALL RESET_REGISTER
                 
-                ; Clear the Error Text
+                ; Reset Error Flag
                 MOV AX, 00000101b
                 MOV BX, OFFSET err_flag
                 MOV [BX], AL
+
+                ; Clear the Error Text
                 CALL CLEAR_OPERATOR
                 RET
     ASK_FIRST ENDP
    
     ASK_SECOND PROC ; Ambraie
+        ; Reset Register
         CALL RESET_REGISTER
+        
+        ; Ask for the value
         AskSecondAgain:
+            ; Reset cursor to its normal position
             MOV DH, 8
             MOV DL, 36
             CALL RESET_CURSOR_VALUE
@@ -481,51 +551,69 @@ title Calculator Project - GROUP 1
             ; Get and store the value
             MOV DX, OFFSET second_value_array
             CALL ASK_INPUT
+
             ; Check second value
             MOV BX, OFFSET err_check
             MOV AX, 00000010b
             MOV [BX], AL
 
-            
+            ; Configure SI for CHECK_VALUE
             MOV SI, OFFSET second_value_array
             CALL CHECK_VALUE
             
+            ; Get err_flag
             MOV BX, OFFSET err_flag
             MOV AX, [BX]
 
+            ; Check if there is an error
             CMP AL, 0111b
             JE SecondInputError
             JMP SecondInputContinue
-            SecondInputError:
+            SecondInputError:                   ; An error has occured
+                ; Print ther error
                 CALL PRINT_ERROR
+
+                ; Reset the flag
                 MOV BX, OFFSET err_flag
                 MOV AX, 00000000b
                 MOV [BX], AX
+
+                ; Configured SI for RESET_ARRAY_VALUE
                 MOV SI, OFFSET second_value_array
+
+                ; Reset the array
                 CALL RESET_ARRAY_VALUE
                 JMP AskSecondAgain
             SecondInputContinue:
-                ; Store Value
+                ; Reset Registers
                 CALL RESET_REGISTER
-                
-                ; Clear the error text
+
+                ; Reset Flag                
                 MOV AX, 00000111b
                 MOV BX, OFFSET err_flag
                 MOV [BX], AX
+
+                ; Clear the error text
                 CALL CLEAR_OPERATOR
                 RET
     ASK_SECOND ENDP
     
     ASK_OPERATOR PROC ; Ambraie
+
+        ; Ask for Operator
         AskOperatorAgain:
+            ; Reset cursor to its normal position
             MOV DH, 9
             MOV DL, 36
             CALL RESET_CURSOR_VALUE
             
+            ; Ask for Input
             MOV AH, 01h
             INT 21h
+            ; Push the value to the stack
             PUSH AX
 
+            ; Check if it's a valid operator
             CMP AL, '+'
             JE OperatorContinue
             CMP AL, '-'
@@ -536,24 +624,36 @@ title Calculator Project - GROUP 1
             JE OperatorContinue
             JMP OperatorInputError
 
-            OperatorInputError:
+            OperatorInputError:             ; If the input is not value
+                ; Configure the error flag
                 MOV AX, 00000011b
                 MOV BX, OFFSET err_flag
                 MOV [BX], AX
+                
+                ; Print the error
                 CALL PRINT_ERROR
+
+                ; Get AX back 
                 POP AX
                 JMP AskOperatorAgain
-            OperatorContinue:
-                ; Store Value
+            OperatorContinue:               ; If there is no error
+                ; Reset Register
                 CALL RESET_REGISTER
+
+                ; Get AX back
                 POP AX
+                
+                ; Save the operator
                 MOV AH, 00h
                 MOV BX, OFFSET operator_value
                 MOV [BX], AX
                 
+                ; Configure Error flag
                 MOV AX, 00000011b
                 MOV BX, OFFSET err_flag
                 MOV [BX], AX
+
+                ; Clear the Operator text
                 CALL CLEAR_OPERATOR
                 RET
     ASK_OPERATOR ENDP
@@ -570,15 +670,19 @@ title Calculator Project - GROUP 1
         MOV BX, OFFSET second_value
         MOV CX, [BX]
 
-        ; Add Value and Save
+        ; Add the Value
         ADD AX, CX
+
+        ; Save the value
         MOV BX, OFFSET answer_value
         MOV [BX], AX
         RET
     ADD_VALUE ENDP
 
     SUB_VALUE PROC  ; Aguirre
+        ; Reset the Register
         CALL RESET_REGISTER
+
         ; Get the first number
         MOV BX, OFFSET first_value
         MOV AX, [BX]
@@ -590,20 +694,24 @@ title Calculator Project - GROUP 1
         ; Subtract the values
         SUB AX, CX
 
+        ; Compare if it's a negative value (less than 0)
         CMP AX, 0
         JL NegativeValue
-        PositiveValue:
+        PositiveValue:                      ; If positive
+            ; Store the value to the 'answer_value'
             MOV BX, OFFSET answer_value
             MOV [BX], AX
             JMP SubtractionEnd
-        NegativeValue:
-            MOV CX, 0FFFFh
-            SUB CX, AX;
+        NegativeValue:                      ; If negative
+            MOV CX, 0FFFFh                  ; get the largest value possible for 2 bytes
+            SUB CX, AX                      ; Subtract it to AX (to get the positive)
             INC CX                          ; The value is less than one everytime when we have negative value
-            MOV BX, OFFSET answer_value
+
+            ; Save the value
+            MOV BX, OFFSET answer_value   
             MOV [BX], CX
 
-            ; Assing Flag
+            ; Configured the flag to print '-' when displaying tha answer
             MOV BX, OFFSET value_flag
             MOV AX, 01h                     ; 01h indicates that it's a negative value
             MOV [BX], AX                   
@@ -612,7 +720,9 @@ title Calculator Project - GROUP 1
     SUB_VALUE ENDP
 
     MUL_VALUE PROC ; Aguirre
+        ; Reset the register
         CALL RESET_REGISTER
+
         ; Get the first number
         MOV BX, OFFSET first_value
         MOV AX, [BX]
@@ -622,15 +732,19 @@ title Calculator Project - GROUP 1
         MOV CX, [BX]
         MOV BX, CX
 
-        ; Add Value and Save
+        ; Multiply the value
         MUL BX
+
+        ; Save the value
         MOV BX, OFFSET answer_value
         MOV [BX], AX
         RET
     MUL_VALUE ENDP
 
     DIV_VALUE PROC ; Aguirre
+        ; Reset Registers
         CALL RESET_REGISTER
+        
         ; Get the first number
         MOV BX, OFFSET first_value
         MOV AX, [BX]
@@ -639,21 +753,27 @@ title Calculator Project - GROUP 1
         MOV BX, OFFSET second_value
         MOV CX, [BX]
 
-        MOV DX, 00h                     ; Reset
+        ; Reset DX (DX contains the remainder)
+        MOV DX, 00h                     
 
+        ; Compare if the value is zero or not
         CMP CX, 30h
         JBE InfiniteValue
         JMP NonInfinite
-        InfiniteValue:
+        InfiniteValue:                      ; If zero
+            ; Configure the flag for infinite
             MOV BX, OFFSET value_flag
             MOV AX, 02h
             MOV [BX], AX
             JMP DivisionEnd
-        NonInfinite:
-            MOV BX, CX                      ; Put the Multiplier in position
-    
-            ; Add Value and Save
+        NonInfinite:                        ; If none-zero
+            ; Put the Multiplier in position
+            MOV BX, CX         
+
+            ; Divide Value
             DIV BX
+            
+            ; Save the answer and remainder
             MOV BX, OFFSET answer_value
             MOV [BX], AX
             MOV BX, OFFSET remainder_value
@@ -693,85 +813,105 @@ title Calculator Project - GROUP 1
     PRINT_ERROR ENDP
 
     PRINT_OPERATOR_ERROR PROC  ; Ryoji
+
+        ; Move the cursor
         MOV DH, 9
         MOV DL, 40
         CALL MOVE_CURSOR
 
+        ; Set Color to Red
         MOV AH, 09h
-        MOV BL, 10001100b ;Color Red (Blinking)
+        MOV BL, 10001100b           ;Red (Blinking)
         MOV CX, 19
         INT 10h
+
+        ; Print error string
         MOV AH, 09h;
         MOV DX, OFFSET err_input
         INT 21h
 
+        ; Set color to blue
         MOV AH, 09h
-        MOV BL, 00001011b ;Color Blue
+        MOV BL, 00001011b           ;Blue
         MOV CX, 18
         INT 10h
         
+        ; Print Suporting Instruction
         MOV DX, OFFSET sup_operator
         INT 21h
         RET
     PRINT_OPERATOR_ERROR ENDP
 
     PRINT_FIRST_NUMBER_ERROR PROC  ; Ryoji
+        ; Move Cursor
         MOV DH, 7
         MOV DL, 40
         CALL MOVE_CURSOR
 
+        ; Set color to RED
         MOV AH, 09h
-        MOV BL, 10001100b ;Color Red (Blinking)
+        MOV BL, 10001100b               ;Red (Blinking)
         MOV CX, 19
         INT 10h
 
+        ; Print error string
         MOV AH, 09h
         MOV DX, OFFSET err_input
         INT 21h
 
+        ; Set color to BLUE
         MOV AH, 09h
-        MOV BL, 00001011b ;Color Blue
+        MOV BL, 00001011b               ;Blue
         MOV CX, 10
         INT 10h
 
+        ; Print supporting instruction
         MOV DX, OFFSET sup_number
         INT 21h
         RET
     PRINT_FIRST_NUMBER_ERROR ENDP
 
     PRINT_SECOND_NUMBER_ERROR PROC  ; Ryoji
+        ; Move Cursor
         MOV DH, 8
         MOV DL, 40
         CALL MOVE_CURSOR
 
+        ; Set color to red
         MOV AH, 09h
-        MOV BL, 10001100b ;Color Red (Blinking)
+        MOV BL, 10001100b               ;Red (Blinking)
         MOV CX, 19
         INT 10h
-
+        
+        ; Print error string
         MOV AH, 09h
         MOV DX, OFFSET err_input
         INT 21h
 
+        ; Set Color to blue
         MOV AH, 09h
-        MOV BL, 00001011b ;Color Blue
+        MOV BL, 00001011b               ;Blue
         MOV CX, 10
         INT 10h
 
+        ; Print Supporting instruction
         MOV DX, OFFSET sup_number
         INT 21h
         RET
     PRINT_SECOND_NUMBER_ERROR ENDP
 
     PRINT_TRY_AGAIN_ERROR PROC  ; Ryoji
+        ; Move cursor
         MOV DH, 14
         MOV DL, 40
         CALL MOVE_CURSOR
 
+        ; Print Error input
         MOV AH, 09h
         MOV DX, OFFSET err_input
         INT 21h
 
+        ; Print Supporting Instruction
         MOV DX, OFFSET sup_try_again
         INT 21h
         RET
@@ -807,10 +947,12 @@ title Calculator Project - GROUP 1
     CLEAR_OPERATOR ENDP
 
     PRINT_OPERATOR_CLEAR PROC  ; Hans
+        ; Move cursor
         MOV DH, 9
         MOV DL, 40
         CALL MOVE_CURSOR
 
+        ; Print Spaces
         MOV AH, 09h
         MOV DX, OFFSET sup_clear_error
         INT 21h
@@ -818,10 +960,12 @@ title Calculator Project - GROUP 1
     PRINT_OPERATOR_CLEAR ENDP
 
     PRINT_FIRST_NUMBER_CLEAR PROC  ; Hans
+        ; Move cursor
         MOV DH, 7
         MOV DL, 40
         CALL MOVE_CURSOR
 
+        ; Print Spaces
         MOV AH, 09h
         MOV DX, OFFSET sup_clear_error
         INT 21h
@@ -829,10 +973,12 @@ title Calculator Project - GROUP 1
     PRINT_FIRST_NUMBER_CLEAR ENDP
 
     PRINT_SECOND_NUMBER_CLEAR PROC  ; Hans
+        ; Move cursor
         MOV DH, 8
         MOV DL, 40
         CALL MOVE_CURSOR
 
+        ; Print Spaces
         MOV AH, 09h
         MOV DX, OFFSET sup_clear_error
         INT 21h
@@ -840,20 +986,24 @@ title Calculator Project - GROUP 1
     PRINT_SECOND_NUMBER_CLEAR ENDP
 
     PRINT_TRY_AGAIN_CLEAR PROC  ; Hans
+        ; Move cursor
         MOV DH, 14
         MOV DL, 40
         CALL MOVE_CURSOR
 
+        ; Print Spaces
         MOV AH, 09h
         MOV DX, OFFSET sup_clear_error
         INT 21h
         RET
     PRINT_TRY_AGAIN_CLEAR ENDP
 
-
     ; [ Printing ]
-
+    ; - Assumes that the values are already calculated and was transformed into hex
+    
+    ; Display the answer
     DISPLAY_ANSWER PROC ; Aguirre
+        ; Move Cursor
         MOV DH, 12
         MOV DL, 35
         CALL MOVE_CURSOR
@@ -862,14 +1012,14 @@ title Calculator Project - GROUP 1
         MOV BX, OFFSET value_flag
         MOV DX,[BX]
 
-        ; Comparing
+        ; Comapre the flags
         CMP DL, 01h                         ; Check if the value is negative
         JE DisplayNegative
-        CMP DL, 02h                        ; Check if the value is infinite
+        CMP DL, 02h                         ; Check if the value is infinite
         JE DisplayInfinite
         JMP ContinueOperatorDisplay
-        DisplayInfinite:
-            ; Save Value
+        DisplayInfinite:                    ; If infinite (divided by zero)
+            ; Print 'inf'
             MOV AH, 02h
             MOV DX, 'i'
             INT 21h
@@ -877,59 +1027,72 @@ title Calculator Project - GROUP 1
             INT 21h
             MOV DX, 'f'
             INT 21h
+            ; Return to MAIN
             JMP EndDigit
-        DisplayNegative:
+        DisplayNegative:                    ; if negative
+            ; print '-' then continue with displaying the numbers
             MOV AH, 02h
             MOV DX, '-'
             INT 21h
         ContinueOperatorDisplay:
+            ; Print the individual digits
             CALL PRINT_ANSWER
 
+            ; Get the remainder value
             MOV BX, OFFSET remainder_value
             MOV AX, [BX]
-            CMP AX, 00h             ; If there are no remainder
+
+            ; Check if a remainder exists
+            CMP AX, 00h
             JE EndDigit
-            RemainderThings:
+            RemainderThings:                ; If there is a remainder
+                ; Print 'r'
                 MOV AH, 02h
                 MOV DL, 'r'
                 INT 21h
 
-                MOV AX, '$'         ; Signifies the end of looping
+                ; Push '$'
+                MOV AX, '$'                 ; Signifies the 'end' of the printing                     
                 PUSH AX         
 
+                ; Reset all registers
                 CALL RESET_REGISTER
 
+                ; Get the remainder value
                 MOV BX, OFFSET remainder_value
                 MOV AX, [BX]
+                
+                ; Set-up CX 
                 MOV CX, 01h
                 RemainderTransform:
-                    MOV BX, 0Ah
-                    DIV BX
-                    ADD DX, 30h
-                    PUSH DX
-                    MOV DX,00h
-                    CMP AX, 00h
-                    JE StopRemainderTransform
-                    MOV CX, 02h
+                    MOV BX, 0Ah                     ; Set-up BX for division (0A -> 10d)
+                    DIV BX                          ; Divide the answer (AX) to 10d (BX)
+                    ADD DX, 30h                     ; Convert the Remainder to ASCII
+                    PUSH DX                         ; push it to the stack
+                    MOV DX,00h                      ; Reset DX
+                    CMP AX, 00h                     ; Check if there is still a value in AX
+                    JE StopRemainderTransform       ; If there is none, then stop transform
+                    MOV CX, 02h                     ; Otherwise, loop infinitely
                     loop RemainderTransform
                 StopRemainderTransform:
-                    MOV CX, 01h
-                    MOV AH, 02h
+                    ; Set-up initial Registers     
+                    MOV CX, 01h                     ; Temporary CX
+                    MOV AH, 02h                     ; Software interuppt for printing
                     PrintRemainderLoop:
-                        POP DX
-                        CMP DX, '$'
-                        JE EndDigit
-                        INT 21h
-                        MOV CX, 02h
+                        POP DX                      ; get the value from the stack and store it to DX
+                        CMP DX, '$'                 ; IF the DX is '$'
+                        JE EndDigit                 ; Then it's the last of the values
+                        INT 21h                     ; Otherwise, print
+                        MOV CX, 02h                 ; then proceed into looping
                         loop PrintRemainderLoop
-
-            EndDigit:
-                RET
+                    EndDigit:
+                        RET
     DISPLAY_ANSWER ENDP
 
     ; [ Auxiliary ]
 
     ; Assumes that DL and DH are already been configured
+    ; Move the cursor to a designated location
     MOVE_CURSOR PROC ; Aguirre
         MOV AH, 02h
         MOV BH, 00h
@@ -937,18 +1100,7 @@ title Calculator Project - GROUP 1
         RET
     MOVE_CURSOR ENDP
 
-    ; Assumes that DL and DH are already been configured
-    RESET_CURSOR_VALUE PROC ; Aguirre
-        CALL MOVE_CURSOR
-        PUSH DX
-        MOV AH, 02h
-        MOV DL, ' '
-        INT 21h
-        POP DX
-        CALL MOVE_CURSOR
-        RET
-    RESET_CURSOR_VALUE ENDP
-
+    ; Clear the Screen
     CLEAR_SCREEN PROC ; Aguirre
         MOV AH, 06h
         MOV AL, 00h
@@ -962,18 +1114,21 @@ title Calculator Project - GROUP 1
     CLEAR_SCREEN ENDP
 
     ; Assumes that DX is initialize before calling
+    ; Ask for a string not a character
     ASK_INPUT PROC  ; Aguirre
         MOV AH, 0Ah
         INT 21h
         RET
     ASK_INPUT ENDP
 
+    ; Store the answer_Value to DX
     GET_ANSWER PROC ; Aguirre
         MOV BX, OFFSET answer_value
         MOV DX, [BX]
         RET
     GET_ANSWER ENDP
 
+    ; Display Top Line
     DISPLAY_TOP PROC ; Aguirre
         ; DA - ┌
         MOV AH, 02h
@@ -983,7 +1138,7 @@ title Calculator Project - GROUP 1
         ; C4 - ─
         mov CX, 30
         MOV DL, 0C4h
-        TopDisplayCharacterLoop:
+        TopDisplayCharacterLoop:            ; Print 30d times
             INT 21h
             loop TopDisplayCharacterLoop
         
@@ -991,12 +1146,14 @@ title Calculator Project - GROUP 1
         MOV DL, 0BFh
         INT 21h    
 
+        ; Print New Line
         MOV AH, 09h
         MOV DX, OFFSET new_line
         INT 21h
         RET
     DISPLAY_TOP ENDP
 
+    ; Display Bottom  line
     DISPLAY_BOT PROC ; Aguirre
         ; C0 - └
         MOV AH, 02h
@@ -1006,7 +1163,7 @@ title Calculator Project - GROUP 1
         ; C4 - ─
         mov CX, 30
         MOV DL, 0C4h
-        BotDisplayCharacterLoop:
+        BotDisplayCharacterLoop:            ; Print 30d times
             INT 21h
             loop BotDisplayCharacterLoop
         
@@ -1014,12 +1171,14 @@ title Calculator Project - GROUP 1
         MOV DL, 0D9h
         INT 21h    
 
+        ; Print new lines
         MOV AH, 09h
         MOV DX, OFFSET new_line
         INT 21h
         RET
     DISPLAY_BOT ENDP
 
+    ; Print new line
     DISPLAY_NEWLINE PROC ; Aguirre
         MOV AH, 09h
         MOV DX, OFFSET new_line
@@ -1027,6 +1186,29 @@ title Calculator Project - GROUP 1
         RET
     DISPLAY_NEWLINE ENDP
     
+    ; Assumes that DL and DH are already been configured
+    ; Delete the printed value inside of the terminal in a cursor and move it back to it
+    RESET_CURSOR_VALUE PROC ; Aguirre
+        ; Move the cursor
+        CALL MOVE_CURSOR
+
+        ; Save DX
+        PUSH DX
+
+        ; Print ' '
+        MOV AH, 02h
+        MOV DL, ' '
+        INT 21h
+
+        ; Restore DX
+        POP DX
+
+        ; Move the cursor back to the position
+        CALL MOVE_CURSOR
+        RET
+    RESET_CURSOR_VALUE ENDP
+
+    ; Reset all relevant variables
     RESET_VALUE PROC ; Aguirre
         
         MOV BX, OFFSET err_flag
@@ -1059,52 +1241,7 @@ title Calculator Project - GROUP 1
 
     RESET_VALUE ENDP
 
-    ; Assumes that err_check is configured before calling
-    ; Assumes that SI is configured before calling
-    CHECK_VALUE PROC ; Aguirre
-        ;MOV SI, OFFSET buffer
-
-        INC SI              ; Point to the value_size: [array_size, value_size, ..., '$']
-        MOV CX, [SI]        ; Get the Size of the array
-        MOV CH, 00h         ; Reset
-        INC SI              ; Get the Value
-        CheckingLoop:
-            MOV AX, [SI]
-            CMP AL, '0'
-            JB GeneralInputError
-            CMP AL, '9'
-            JA GeneralInputError
-            INC SI
-            loop CheckingLoop
-        JMP CheckingIsGood
-
-        GeneralInputError:
-            ; get the checking value
-            MOV BX, OFFSET err_check
-            MOV AX, [BX]
-
-            CMP AL, 0001b
-            JE FirstValueErr
-            CMP AL, 0010b
-            JE SecondValueErr
-
-            ; If err_check didn't get configured
-            ; then it will automatically print out FirstValueErr
-            ; Again, we assume that it's configured, if for some reason not, then CONFIGURE IT
-            FirstValueErr:
-                MOV BX, OFFSET err_flag
-                MOV AX, 00000101b
-                MOV [BX], AL
-                JMP CheckingIsGood
-            SecondValueErr:
-                MOV BX, OFFSET err_flag
-                MOV AX, 00000111b
-                MOV [BX], AL
-                JMP CheckingIsGood
-        CheckingIsGood:
-            RET
-    CHECK_VALUE ENDP
-
+    ; Reset all registers to zero
     RESET_REGISTER PROC ; Aguirre
         MOV AX, 00h
         MOV BX, 00h
@@ -1115,12 +1252,9 @@ title Calculator Project - GROUP 1
 
     ; Assumes that SI is configured
     RESET_ARRAY_VALUE PROC
-        ; Point to the size
-        INC SI
-        ; Get the size
-        MOV CX, [SI]
-        ; Reset
-        MOV CH, 00h
+        INC SI              ; Point to the size
+        MOV CX, [SI]        ; Get the size
+        MOV CH, 00h         ; Reset
         ; Point to the value
         INC SI
         ResetArrayLoop:
@@ -1132,7 +1266,64 @@ title Calculator Project - GROUP 1
         RET
     RESET_ARRAY_VALUE ENDP
 
+    ; Assumes that err_check is configured before calling
+    ; Assumes that SI is configured before calling
+    ; Check the value of the array if everything contains only numbers
+    CHECK_VALUE PROC ; Aguirre
+        INC SI                          ; Point to the value_size: [array_size, value_size, ..., '$']
+        MOV CX, [SI]                    ; Get the Size of the array
+        MOV CH, 00h                     ; Reset
+        INC SI                          ; Get the Value
+        CheckingLoop:                   ; Loop through each values
+            MOV AX, [SI]                ; Store the value of [SI]
+            CMP AL, '0'                 ; compare it to '0'
+            JB GeneralInputError        ; if it's below, then trigger an error 
+            CMP AL, '9'                 ; compare it to '9'
+            JA GeneralInputError        ; if it's above, then trigger an error
+            INC SI                      ; Increment SI to point to the next element
+            loop CheckingLoop           ; loop back
+        JMP CheckingIsGood
+
+        GeneralInputError:              ; If an error occured 
+            ; get the checking value
+            MOV BX, OFFSET err_check
+            MOV AX, [BX]
+
+            ; Check if we are checking the first input or the 2nd input
+            CMP AL, 0001b
+            JE FirstValueErr
+            CMP AL, 0010b
+            JE SecondValueErr
+
+            ; If err_check didn't get configured
+            ; then it will automatically trigger FirstValueErr
+            ; Again, we assume that it's configured, if for some reason it's not, then CONFIGURE IT
+            FirstValueErr:
+                ; Configure error flag
+                MOV BX, OFFSET err_flag 
+                MOV AX, 00000101b
+                MOV [BX], AL
+                
+                ; Return to the calling function
+                JMP CheckingIsGood
+            SecondValueErr:
+                ; Configure error flag
+                MOV BX, OFFSET err_flag
+                MOV AX, 00000111b
+                MOV [BX], AL
+
+                ; Return to the calling function
+                JMP CheckingIsGood
+        CheckingIsGood:
+            RET
+    CHECK_VALUE ENDP
+
+
+
+
+
     ; Assumes SI and DI is configured to pointing to the size
+    ; Auxillary function of COVERT_TO_HEX that implements the convertion to HEX and store it to DX
     TRANSFORM_VALUE PROC ; Aguirre
         ; Imperative since we are handling 2 bytes of memory
         CALL RESET_REGISTER
@@ -1195,11 +1386,11 @@ title Calculator Project - GROUP 1
 
     ; Convert First and Second Value to HEX
     CONVERT_TO_HEX PROC ; Aguirre
-
         ; Transform First Value to HEX
         MOV SI, OFFSET first_value_array+1
         MOV DI, OFFSET first_value_array+1
         CALL TRANSFORM_VALUE
+
         ; Then store it to the 'first_value'
         MOV BX, OFFSET first_value
         MOV [BX], DX
@@ -1208,23 +1399,21 @@ title Calculator Project - GROUP 1
         MOV SI, OFFSET second_value_array+1
         MOV DI, OFFSET second_value_array+1
         CALL TRANSFORM_VALUE
+
         ; Then store it to the 'second_value'
         MOV BX, OFFSET second_value
         MOV [BX], DX
 
-
-        MOV SI, OFFSET answer_value_array + 2
-        ;CALL ADD_VALUE
-        ;CALL PRINT_ANSWER
-        
         RET
     CONVERT_TO_HEX ENDP
 
+    ; Print the individual digits to the console
     PRINT_ANSWER PROC ; aguirre
         ; Will be use later for "PrintingLoop"
         MOV AX, '$'
         PUSH AX
 
+        ; Reset the register
         CALL RESET_REGISTER
 
         ; Get and store the value inside of answer_value
