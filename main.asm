@@ -123,9 +123,161 @@ title Calculator Project - GROUP 1
         MOV AX, @data
         MOV DS, AX
         MOV ES, AX
+        MainReDo:
+            CALL RESET_VALUE
+            CALL CLEAR_SCREEN
+            CALL START_TITLE
 
-        CALL RESET_VALUE
-	    CALL CLEAR_SCREEN
+            MainContinue:
+                ; Initialize Screen
+                CALL RESET_VALUE
+                CALL CLEAR_SCREEN
+                
+                ; Calling the main procedures
+                CALL DISPLAY_FIRST_PROMPT
+                CALL ASK_FIRST
+                CALL DISPLAY_SECOND_PROMPT
+                CALL ASK_SECOND
+    
+                ; Convert the inputs to hex
+                CALL CONVERT_TO_HEX
+    
+                CALL DISPLAY_OPERATOR_PROMPT
+                CALL ASK_OPERATOR
+    
+                ; Get the Operator 
+                MOV BX, OFFSET operator_value
+                MOV AX, [BX]
+    
+                ; Comparing [No Checking]
+                CMP AL, '+'
+                JE AddFunction
+                CMP AL, '-'
+                JE SubFunction
+                CMP AL, '*'
+                JE MulFunction
+                CMP AL, '/'
+                JE DivFunction
+                
+                ; Functions
+                AddFunction:
+                    CALL ADD_VALUE
+                    JMP CompareContine
+                SubFunction:
+                    CALL SUB_VALUE
+                    JMP CompareContine
+                MulFunction:
+                    CALL MUL_VALUE
+                    JMP CompareContine
+                MainStopRelative:
+                    JMP MainStop
+                DivFunction:
+                    CALL DIV_VALUE
+                CompareContine:
+                    ; Answer
+                    CALL DISPLAY_ANSWER_BOX
+                    CALL DISPLAY_ANSWER
+    
+                    ; Try Again
+                    CALL DISPLAY_TRY_AGAIN_BOX
+                    MOV DH, 16
+                    MOV DL, 36
+                    CALL MOVE_CURSOR
+                    MOV AH, 01h
+                    INT 21h
+    
+                    ; The program will stop if any value is entered other than 'y'
+                    CMP AL, 'y'
+                    JE MainContinue
+                    CMP AL, 'Y'
+                    JE MainContinue
+                    JMP MainStop
+                MainStop:
+                    CALL CLEAR_SCREEN
+                    MOV DH, 0Bh
+                    MOV DL, 00h
+                    CALL MOVE_CURSOR
+                    ; terminate the program
+                    MOV AH, 04Ch
+                    INT 21h
+    MAIN ENDP
+
+    START_TITLE PROC
+        TitleReDo:
+            CALL DISPLAY_START
+            ; Set cursor position
+            MOV DH, 10H
+            MOV DL, 28H
+            CALL MOVE_CURSOR
+    
+            ; Get Input of the user
+            MOV AH, 1
+            INT 21H
+    
+            CMP AL, '1'
+            JE CallIns01
+            CMP AL, '2'
+            JE RetTitle
+            CMP AL, '3'
+            JE EndProgramTitle
+            JMP TitleReDo
+    
+            EndProgramTitle:
+                ; terminate the program
+                MOV AH, 04Ch
+                INT 21h
+
+            CallIns01:
+                CALL DISPLAY_INST1
+                ; Get Input of the user
+                MOV AH, 1
+                INT 21H
+        
+                CMP AL, '1'
+                JE TitleReDo
+                CMP AL, '2'
+                JE CallIns02
+                JMP CallIns01
+            CallIns02:
+                CALL DISPLAY_INST2
+                ; Get Input of the user
+                MOV AH, 1
+                INT 21H
+        
+                CMP AL, '1'
+                JE CallIns01
+                CMP AL, '2'
+                JE CallIns03
+                JMP CallIns02
+            CallIns03:
+                CALL DISPLAY_INST3
+                ; Get Input of the user
+                MOV AH, 1
+                INT 21H
+        
+                CMP AL, '1'
+                JE CallIns02
+                CMP AL, '2'
+                JE CallIns04
+                JMP CallIns03
+            CallIns04:
+                CALL DISPLAY_INST4
+                ; Get Input of the user
+                MOV AH, 1
+                INT 21H
+        
+                CMP AL, '1'
+                JE CallIns03
+                CMP AL, '2'
+                JE TitleReDo
+                JMP CallIns04
+            RetTitle:
+                RET
+    START_TITLE ENDP
+
+    ; [Display]
+    DISPLAY_START PROC
+        CALL CLEAR_SCREEN
 
         ;set cursor position
         MOV DH, 6
@@ -142,7 +294,7 @@ title Calculator Project - GROUP 1
         MOV DX, OFFSET start7 ;Prompts for the "------------------------"
         INT 21H
 
-      ;set cursor position
+        ;set cursor position
         MOV DH, 8
         MOV DL, 20H
         CALL MOVE_CURSOR
@@ -228,115 +380,28 @@ title Calculator Project - GROUP 1
         MOV AH, 9
         MOV DX, OFFSET start7 ;Prompts for the "------------------------"
         INT 21H
+        RET
+    DISPLAY_START ENDP
 
-        ;set cursor position
-        MOV DH, 10H
-        MOV DL, 28H
-        CALL MOVE_CURSOR
-
-        ;Get Input of the user
-        MOV AH, 1
-        INT 21H
-
-       ;CMP AL, '1'
-       ;JE DISPLAY_INST1
-       ;CMP AL, '2'
-       ;JE DISPLAY_FIRST_PROMPT
-       ;CMP AL, '3'
-       ;JE EXIT PROC
-
-        MainContinue:
-        
-            ; Initialize Screen
-            CALL RESET_VALUE
-            CALL CLEAR_SCREEN
-            
-            ; Calling the main procedures
-            CALL DISPLAY_FIRST_PROMPT
-            CALL ASK_FIRST
-            CALL DISPLAY_SECOND_PROMPT
-            CALL ASK_SECOND
-
-            ; Convert the inputs to hex
-            CALL CONVERT_TO_HEX
-
-            CALL DISPLAY_OPERATOR_PROMPT
-            CALL ASK_OPERATOR
-
-            ; Get the Operator 
-            MOV BX, OFFSET operator_value
-            MOV AX, [BX]
-
-            ; Comparing [No Checking]
-            CMP AL, '+'
-            JE AddFunction
-            CMP AL, '-'
-            JE SubFunction
-            CMP AL, '*'
-            JE MulFunction
-            CMP AL, '/'
-            JE DivFunction
-            
-            ; Functions
-            AddFunction:
-                CALL ADD_VALUE
-                JMP CompareContine
-            SubFunction:
-                CALL SUB_VALUE
-                JMP CompareContine
-            MulFunction:
-                CALL MUL_VALUE
-                JMP CompareContine
-            DivFunction:
-                CALL DIV_VALUE
-            CompareContine:
-                ; Answer
-                CALL DISPLAY_ANSWER_BOX
-                CALL DISPLAY_ANSWER
-
-                ; Try Again
-                CALL DISPLAY_TRY_AGAIN_BOX
-                MOV DH, 16
-                MOV DL, 36
-                CALL MOVE_CURSOR
-                MOV AH, 01h
-                INT 21h
-
-                ; The program will stop if any value is entered other than 'y'
-                CMP AL, 'y'
-                JE MainContinue
-                CMP AL, 'Y'
-                JE MainContinue
-                JMP MainStop
-            MainStop:
-                CALL CLEAR_SCREEN
-                MOV DH, 0Bh
-                MOV DL, 00h
-                CALL MOVE_CURSOR
-                ; terminate the program
-                MOV AH, 04Ch
-                INT 21h
-    MAIN ENDP
-
-    ; [Display]
     DISPLAY_INST1 PROC
+        CALL CLEAR_SCREEN
         ; top green background
-	    mov bh,00100000b 
-	    mov ch,0 
-	    mov cl,0
-	    mov dh,1
-	    mov dl,79
-	    int 10h
+        mov bh,00100000b 
+        mov ch,0 
+        mov cl,0
+        mov dh,1
+        mov dl,79
+        int 10h
 
-	    ; bottom green background
-	    mov bh,00100000b 
-	    mov ch,23
-	    mov cl,0
-	    mov dh,24
-	    mov dl,79
-	    int 10h
+        ; bottom green background
+        mov bh,00100000b 
+        mov ch,23
+        mov cl,0
+        mov dh,24
+        mov dl,79
+        int 10h
 
-	    ; Press [1] to Back
+        ; Press [1] to Back
         ; set cursor position
         MOV DH, 03h
         MOV DL, 0h
@@ -352,7 +417,7 @@ title Calculator Project - GROUP 1
         MOV DX, OFFSET press1
         INT 21H
 
-	    ; Press [2] to Next
+        ; Press [2] to Next
         ;set cursor position
         MOV DH, 03h
         MOV DL, 3Dh
@@ -368,7 +433,7 @@ title Calculator Project - GROUP 1
         MOV DX, OFFSET press2
         INT 21H
 
-	    ; Prompts
+        ; Prompts
         ; set cursor position
         MOV DH, 09h
         MOV DL, 12h
@@ -396,75 +461,72 @@ title Calculator Project - GROUP 1
         MOV DX, OFFSET inst1c
         INT 21H
 
-	    ;set color
+        ;set color
         MOV AH, 09h
         MOV BL, 00000011b
         MOV CX, 12
         INT 10h
-
+    
         MOV AH, 9
         MOV DX, OFFSET inst1d
         INT 21H
-
+    
         ; set cursor position
         MOV DH, 0Dh
         MOV DL, 14h
         CALL MOVE_CURSOR
-
+    
         MOV AH, 9
         MOV DX, OFFSET inst1e
         INT 21H
-
-	    ;set color
+    
+        ;set color
         MOV AH, 09h
         MOV BL, 00000011b
         MOV CX, 4
         INT 10h
-
+    
         MOV AH, 9
         MOV DX, OFFSET inst1f
         INT 21H
-
+    
         MOV AH, 9
         MOV DX, OFFSET inst1g
         INT 21H
-
+    
         ; set cursor position
         MOV DH, 0Eh
         MOV DL, 15h
         CALL MOVE_CURSOR
-
+    
         MOV AH, 9
         MOV DX, OFFSET inst1h
         INT 21H
-
+    
         ; set cursor position
         MOV DH, 0Fh
         MOV DL, 1Eh
         CALL MOVE_CURSOR
-
+    
         MOV AH, 9
         MOV DX, OFFSET inst1i
         INT 21H
-
-	    ;set color
+    
+        ;set color
         MOV AH, 09h
         MOV BL, 00000011b
         MOV CX, 10
         INT 10h
-
+    
         MOV AH, 9
         MOV DX, OFFSET inst1j
         INT 21H
 
-        ; set cursor position
-        MOV DH, 17h
-        MOV DL, 28h
-        CALL MOVE_CURSOR
         RET
     DISPLAY_INST1 ENDP
 
     DISPLAY_INST2 PROC
+        CALL CLEAR_SCREEN
 
     	; top green background
 	    MOV BH,00100000b 
@@ -721,6 +783,7 @@ title Calculator Project - GROUP 1
     DISPLAY_INST2 ENDP
 
     DISPLAY_INST3 PROC
+        CALL CLEAR_SCREEN
 
     	; top green background
 	    MOV BH,00100000b 
@@ -927,6 +990,7 @@ title Calculator Project - GROUP 1
     DISPLAY_INST3 ENDP
 
     DISPLAY_INST4 PROC
+        CALL CLEAR_SCREEN
 
     	; top green background
 	    MOV BH,00100000b 
@@ -2338,10 +2402,6 @@ title Calculator Project - GROUP 1
         CheckingIsGood:
             RET
     CHECK_VALUE ENDP
-
-
-
-
 
     ; Assumes SI and DI is configured to pointing to the size
     ; Auxillary function of COVERT_TO_HEX that implements the convertion to HEX and store it to DX
