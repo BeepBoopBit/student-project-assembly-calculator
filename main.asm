@@ -3,18 +3,19 @@ title Calculator Project - GROUP 1
 .stack
 .data
     ; Prompt Variable
-    first_prompt    db " Enter the first number :     $"
-    second_prompt   db " Enter the second number:     $"
-    operator_prompt db " Enter the operation    :     $" 
-    ans_prompt      db " Answer                 :     $"
-    end_prompt      db " Try Again              :     $"
+    first_prompt    db " Enter the first number :       $"
+    second_prompt   db " Enter the second number:       $"
+    operator_prompt db " Enter the operation    :       $" 
+    ans_prompt      db " Answer                 :       $"
+    end_prompt      db " Try Again              :       $"
     new_line        db 0ah, 0dh, '$'
 
     ; Support Prompts
     sup_operator    db " [ + | - | * | / ] $"
-    sup_number      db " [ 0 - 9 ]$"
+    sup_number      db " [ 0 - 65535 ]$"
     sup_try_again   db " [ Y | y | Any Value (exit) ] $"
     sup_clear_error db "                                  $"
+    sup_clear_error2 db "     $"
 
     ; Errors Variables
     ; 0001 -> Wrong Input  (General) [No Use for now]
@@ -42,7 +43,7 @@ title Calculator Project - GROUP 1
     answer_value_array  db 20h, 0h, 20h dup('$')
     value_flag          db 00h      ; tell if it's a negative (0001) or infinite (0010)
 
-       ; Program Start Variables
+    ; Program Start Variables
     start1		  db " IT150-8L / OL165$"
     start2		  db "BASIC ARITHMETIC OPERATIONS CALCULATOR$"
     start3		  db "By Group 1$"
@@ -109,15 +110,15 @@ title Calculator Project - GROUP 1
     ;Program Instructions 4 Variables
     inst4a        db "Example$"
     inst4b        db "INSTRUCTIONS (4/4)$"
-    inst4c        db "2333$"
-    inst4d        db "126 $"
-    inst4e        db "+   $"
-    inst4f        db "2459$"
-    inst4g        db "Y   $"
+    inst4c        db "2333  $"
+    inst4d        db "126   $"
+    inst4e        db "+     $"
+    inst4f        db "2459  $"
+    inst4g        db "Y     $"
+
 
 .code
     ; [ Main Function ]
-
     MAIN PROC ; Aguirre
         ; Initialize the data
         MOV AX, @data
@@ -1330,7 +1331,7 @@ title Calculator Project - GROUP 1
         ; Move the cursor
         MOV DH, 7
         MOV DL, 08h
-	    CALL MOVE_CURSOR
+	  CALL MOVE_CURSOR
 
         ; B3 - |
         MOV AH, 02h
@@ -1350,7 +1351,7 @@ title Calculator Project - GROUP 1
         ; Set Color to Blue
         MOV AH, 09h
         MOV BL, 00001011b               ;Blue
-        MOV CX, 10
+        MOV CX, 14
         INT 10h
 
         ; Print Supporting Instruction
@@ -1394,7 +1395,7 @@ title Calculator Project - GROUP 1
         ; Set Color to Blue
         MOV AH, 09h
         MOV BL, 00001011b                      ;Blue
-        MOV CX, 10
+        MOV CX, 14
         INT 10h
       
         ; Print Supporting Instruction
@@ -1572,6 +1573,17 @@ title Calculator Project - GROUP 1
             MOV DL, 36
             CALL RESET_CURSOR_VALUE
 
+            ; Print Spaces to clear wrong input
+            MOV AH, 09h
+            MOV DX, OFFSET sup_clear_error2
+            INT 21h
+
+            ; Move cursor
+            MOV DH, 7
+            MOV DL, 36
+            CALL MOVE_CURSOR
+
+
             ; Get and store the value
             MOV DX, OFFSET first_value_array
             CALL ASK_INPUT
@@ -1628,6 +1640,16 @@ title Calculator Project - GROUP 1
         
         ; Ask for the value
         AskSecondAgain:
+            ; Reset cursor to its normal position
+            MOV DH, 8
+            MOV DL, 36
+            CALL RESET_CURSOR_VALUE
+
+            ; Print Spaces to clear wrong input
+            MOV AH, 09h
+            MOV DX, OFFSET sup_clear_error2
+            INT 21h
+
             ; Reset cursor to its normal position
             MOV DH, 8
             MOV DL, 36
@@ -1901,7 +1923,7 @@ title Calculator Project - GROUP 1
 
         ; Move the cursor
         MOV DH, 9
-        MOV DL, 40
+        MOV DL, 42
         CALL MOVE_CURSOR
 
         ; Set Color to Red
@@ -1930,7 +1952,7 @@ title Calculator Project - GROUP 1
     PRINT_FIRST_NUMBER_ERROR PROC  ; Ryoji
         ; Move Cursor
         MOV DH, 7
-        MOV DL, 40
+        MOV DL, 42
         CALL MOVE_CURSOR
 
         ; Set color to RED
@@ -1947,7 +1969,7 @@ title Calculator Project - GROUP 1
         ; Set color to BLUE
         MOV AH, 09h
         MOV BL, 00001011b               ;Blue
-        MOV CX, 10
+        MOV CX, 14
         INT 10h
 
         ; Print supporting instruction
@@ -1959,7 +1981,7 @@ title Calculator Project - GROUP 1
     PRINT_SECOND_NUMBER_ERROR PROC  ; Ryoji
         ; Move Cursor
         MOV DH, 8
-        MOV DL, 40
+        MOV DL, 42
         CALL MOVE_CURSOR
 
         ; Set color to red
@@ -1976,7 +1998,7 @@ title Calculator Project - GROUP 1
         ; Set Color to blue
         MOV AH, 09h
         MOV BL, 00001011b               ;Blue
-        MOV CX, 10
+        MOV CX, 14
         INT 10h
 
         ; Print Supporting instruction
@@ -1988,7 +2010,7 @@ title Calculator Project - GROUP 1
     PRINT_TRY_AGAIN_ERROR PROC  ; Ryoji
         ; Move cursor
         MOV DH, 14
-        MOV DL, 40
+        MOV DL, 42
         CALL MOVE_CURSOR
 
         ; Print Error input
@@ -2034,7 +2056,7 @@ title Calculator Project - GROUP 1
     PRINT_OPERATOR_CLEAR PROC  ; Hans
         ; Move cursor
         MOV DH, 9
-        MOV DL, 40
+        MOV DL, 42
         CALL MOVE_CURSOR
 
         ; Print Spaces
@@ -2047,7 +2069,7 @@ title Calculator Project - GROUP 1
     PRINT_FIRST_NUMBER_CLEAR PROC  ; Hans
         ; Move cursor
         MOV DH, 7
-        MOV DL, 40
+        MOV DL, 42
         CALL MOVE_CURSOR
 
         ; Print Spaces
@@ -2060,7 +2082,7 @@ title Calculator Project - GROUP 1
     PRINT_SECOND_NUMBER_CLEAR PROC  ; Hans
         ; Move cursor
         MOV DH, 8
-        MOV DL, 40
+        MOV DL, 42
         CALL MOVE_CURSOR
 
         ; Print Spaces
@@ -2073,7 +2095,7 @@ title Calculator Project - GROUP 1
     PRINT_TRY_AGAIN_CLEAR PROC  ; Hans
         ; Move cursor
         MOV DH, 14
-        MOV DL, 40
+        MOV DL, 42
         CALL MOVE_CURSOR
 
         ; Print Spaces
@@ -2221,7 +2243,7 @@ title Calculator Project - GROUP 1
         INT 21h
         
         ; C4 - ─
-        mov CX, 30
+        mov CX, 32
         MOV DL, 0C4h
         TopDisplayCharacterLoop:            ; Print 30d times
             INT 21h
@@ -2246,7 +2268,7 @@ title Calculator Project - GROUP 1
         INT 21h
         
         ; C4 - ─
-        mov CX, 30
+        mov CX, 32
         MOV DL, 0C4h
         BotDisplayCharacterLoop:            ; Print 30d times
             INT 21h
@@ -2402,6 +2424,10 @@ title Calculator Project - GROUP 1
         CheckingIsGood:
             RET
     CHECK_VALUE ENDP
+
+
+
+
 
     ; Assumes SI and DI is configured to pointing to the size
     ; Auxillary function of COVERT_TO_HEX that implements the convertion to HEX and store it to DX
