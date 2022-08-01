@@ -206,7 +206,7 @@ title Calculator Project - GROUP 1
                     INT 21h
     MAIN ENDP
 
-    START_TITLE PROC
+    START_TITLE PROC ; Aguirre
         TitleReDo:
             CALL DISPLAY_START
             ; Set cursor position
@@ -280,7 +280,7 @@ title Calculator Project - GROUP 1
     START_TITLE ENDP
 
     ; [Display]
-    DISPLAY_START PROC
+    DISPLAY_START PROC ; Hans and Ryoji
         CALL CLEAR_SCREEN
 
         ;set cursor position
@@ -387,7 +387,7 @@ title Calculator Project - GROUP 1
         RET
     DISPLAY_START ENDP
 
-    DISPLAY_INST1 PROC
+    DISPLAY_INST1 PROC ; Paul and Ambraie
         CALL CLEAR_SCREEN
         ; top green background
         mov bh,00100000b 
@@ -556,7 +556,7 @@ title Calculator Project - GROUP 1
         RET
     DISPLAY_INST1 ENDP
 
-    DISPLAY_INST2 PROC
+    DISPLAY_INST2 PROC ; Paul and Ambraie
         CALL CLEAR_SCREEN
 
     	; top green background
@@ -813,7 +813,7 @@ title Calculator Project - GROUP 1
         RET
     DISPLAY_INST2 ENDP
 
-    DISPLAY_INST3 PROC
+    DISPLAY_INST3 PROC ; Paul and Ryoji
         CALL CLEAR_SCREEN
 
     	; top green background
@@ -1020,7 +1020,7 @@ title Calculator Project - GROUP 1
         RET
     DISPLAY_INST3 ENDP
 
-    DISPLAY_INST4 PROC
+    DISPLAY_INST4 PROC ; Ambraie and Ryoji
         CALL CLEAR_SCREEN
 
     	; top green background
@@ -2417,10 +2417,6 @@ title Calculator Project - GROUP 1
         CheckingIsGood:
             RET
     CHECK_VALUE ENDP
-
-
-
-
 
     ; Assumes SI and DI is configured to pointing to the size
     ; Auxillary function of COVERT_TO_HEX that implements the convertion to HEX and store it to DX
