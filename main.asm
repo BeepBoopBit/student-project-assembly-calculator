@@ -1857,8 +1857,6 @@ title Calculator Project - GROUP 1
         MOV DX, 00h                     
 
         ; Compare if the value is zero or not
-        CMP CX, 30h
-        JE InfiniteValue
         CMP CX, 00h
         JE InfiniteValue
         JMP NonInfinite
