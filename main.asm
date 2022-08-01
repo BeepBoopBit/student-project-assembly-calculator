@@ -1324,7 +1324,7 @@ title Calculator Project - GROUP 1
         ; Move the cursor
         MOV DH, 7
         MOV DL, 08h
-	  CALL MOVE_CURSOR
+	    CALL MOVE_CURSOR
 
         ; B3 - |
         MOV AH, 02h
@@ -1858,7 +1858,7 @@ title Calculator Project - GROUP 1
 
         ; Compare if the value is zero or not
         CMP CX, 30h
-        JBE InfiniteValue
+        JE InfiniteValue
         JMP NonInfinite
         InfiniteValue:                      ; If zero
             ; Configure the flag for infinite
