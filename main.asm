@@ -64,11 +64,14 @@ title Calculator Project - GROUP 1
     inst1c		  db "Program will only accept numbers from$"
     inst1d        db " [0 - 65535].$"
     inst1e        db "Program will only support$"
-    inst1f        db " [5$"
+    inst1f        db " [5]$"
     inst1g        db " digit input.$"
     inst1h        db "Program will be expecting the following$"
     inst1i        db "operators:$"
     inst1j        db " [+ - * /]$"
+    inst1k        db "Program can only calculate up-to 65535$"
+    inst1l        db "65535+65535 will produce wrong answers$"
+    inst1m        db "because the sum is > 65535.$"
 
     ;Program Instructions 2 Variables
     inst2a		  db "         How to Use the Program$"
@@ -474,7 +477,7 @@ title Calculator Project - GROUP 1
     
         ; set cursor position
         MOV DH, 0Dh
-        MOV DL, 14h
+        MOV DL, 10h
         CALL MOVE_CURSOR
     
         MOV AH, 9
@@ -497,7 +500,7 @@ title Calculator Project - GROUP 1
     
         ; set cursor position
         MOV DH, 0Eh
-        MOV DL, 15h
+        MOV DL, 10h
         CALL MOVE_CURSOR
     
         MOV AH, 9
@@ -506,7 +509,7 @@ title Calculator Project - GROUP 1
     
         ; set cursor position
         MOV DH, 0Fh
-        MOV DL, 1Eh
+        MOV DL, 15h
         CALL MOVE_CURSOR
     
         MOV AH, 9
@@ -521,6 +524,33 @@ title Calculator Project - GROUP 1
     
         MOV AH, 9
         MOV DX, OFFSET inst1j
+        INT 21H
+
+	  ; set cursor position
+        MOV DH, 10h
+        MOV DL, 10h
+        CALL MOVE_CURSOR
+
+        MOV AH, 9
+        MOV DX, OFFSET inst1k
+        INT 21H
+
+	  ; set cursor position
+        MOV DH, 11h
+        MOV DL, 15h
+        CALL MOVE_CURSOR
+
+        MOV AH, 9
+        MOV DX, OFFSET inst1l
+        INT 21H
+
+	  ; set cursor position
+        MOV DH, 12h
+        MOV DL, 15h
+        CALL MOVE_CURSOR
+
+        MOV AH, 9
+        MOV DX, OFFSET inst1m
         INT 21H
 
         RET
@@ -1045,42 +1075,34 @@ title Calculator Project - GROUP 1
 
         ; Prompts
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 09h
+        MOV DH, 06h
         MOV DL, 25h
-        INT 10H
+        CALL MOVE_CURSOR
 
         MOV AH, 09h
         MOV DX, OFFSET inst4a
         INT 21H
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 0Ah
+        MOV DH, 07h
         MOV DL, 20h
-        INT 10H
+        CALL MOVE_CURSOR
 
         MOV AH, 09h
         MOV DX, OFFSET inst4b
         INT 21H
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 0Ch
+        MOV DH, 08h
         MOV DL, 19h
-        INT 10H
+        CALL MOVE_CURSOR
 
         CALL DISPLAY_TOP
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 0Dh
+        MOV DH, 09h
         MOV DL, 19h
-        INT 10H
+        CALL MOVE_CURSOR
 
         ; B3 - |
         MOV AH, 02h
@@ -1092,11 +1114,9 @@ title Calculator Project - GROUP 1
         int 21h
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 0Dh
+        MOV DH, 09h
         MOV DL, 34h
-        INT 10H
+        CALL MOVE_CURSOR
 
         ;set color
         MOV AH, 09h
@@ -1114,11 +1134,9 @@ title Calculator Project - GROUP 1
         INT 21h
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 0Eh
+        MOV DH, 0Ah
         MOV DL, 19h
-        INT 10H
+        CALL MOVE_CURSOR
 
         ; B3 - |
         MOV AH, 02h
@@ -1130,11 +1148,9 @@ title Calculator Project - GROUP 1
         int 21h
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 0Eh
+        MOV DH, 0Ah
         MOV DL, 34h
-        INT 10H
+        CALL MOVE_CURSOR
 
         ;set color
         MOV AH, 09h
@@ -1152,11 +1168,9 @@ title Calculator Project - GROUP 1
         INT 21h
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 0Fh
+        MOV DH, 0Bh
         MOV DL, 19h
-        INT 10H
+        CALL MOVE_CURSOR
 
         ; B3 - |
         MOV AH, 02h
@@ -1168,18 +1182,15 @@ title Calculator Project - GROUP 1
         int 21h
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 0Fh
+        MOV DH, 0Bh
         MOV DL, 34h
-        INT 10H
+        CALL MOVE_CURSOR
 
         ;set color
         MOV AH, 09h
         MOV BL, 00000011b
         MOV CX, 1
         INT 10h 
-
 
         MOV AH, 09h
         MOV DX, OFFSET inst4e
@@ -1191,29 +1202,23 @@ title Calculator Project - GROUP 1
         INT 21h
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 10h
+        MOV DH, 0Ch
         MOV DL, 19h
-        INT 10H
+        CALL MOVE_CURSOR
 
         CALL DISPLAY_BOT
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 11h
+        MOV DH, 0Dh
         MOV DL, 19h
-        INT 10H
+        CALL MOVE_CURSOR
 
         CALL DISPLAY_TOP
         
         ; set cursor position
-	    MOV AH, 02
-        MOV BH, 0
-        MOV DH, 12h
+        MOV DH, 0Eh
         MOV DL, 19h
-        INT 10H
+        CALL MOVE_CURSOR
 
         ; B3 - |
         MOV AH, 02h
@@ -1225,11 +1230,9 @@ title Calculator Project - GROUP 1
         int 21h
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 12h
+        MOV DH, 0Eh
         MOV DL, 34h
-        INT 10H
+        CALL MOVE_CURSOR
 
         ;set color
         MOV AH, 09h
@@ -1247,29 +1250,23 @@ title Calculator Project - GROUP 1
         INT 21h
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 13h
+        MOV DH, 0Fh
         MOV DL, 19h
-        INT 10H
+        CALL MOVE_CURSOR
 
         CALL DISPLAY_BOT
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 14h
+        MOV DH, 10h
         MOV DL, 19h
-        INT 10H
+        CALL MOVE_CURSOR
 
         CALL DISPLAY_TOP
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 15h
+        MOV DH, 11h
         MOV DL, 19h
-        INT 10H
+        CALL MOVE_CURSOR
 
         ; B3 - |
         MOV AH, 02h
@@ -1281,11 +1278,9 @@ title Calculator Project - GROUP 1
         int 21h
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 15h
+        MOV DH, 11h
         MOV DL, 34h
-        INT 10H
+        CALL MOVE_CURSOR
 
         ;set color
         MOV AH, 09h
@@ -1303,11 +1298,9 @@ title Calculator Project - GROUP 1
         INT 21h
 
         ; set cursor position
-	    MOV AH, 02h
-        MOV BH, 0
-        MOV DH, 16h
+        MOV DH, 12h
         MOV DL, 19h
-        INT 10H
+        CALL MOVE_CURSOR
 
         CALL DISPLAY_BOT
 
