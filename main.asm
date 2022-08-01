@@ -1859,6 +1859,8 @@ title Calculator Project - GROUP 1
         ; Compare if the value is zero or not
         CMP CX, 30h
         JE InfiniteValue
+        CMP CX, 00h
+        JE InfiniteValue
         JMP NonInfinite
         InfiniteValue:                      ; If zero
             ; Configure the flag for infinite
